@@ -1,22 +1,37 @@
 "use client";
 import { useState } from "react";
+import { Locale, t } from "@/data/translations";
 
-export function Header() {
+export function Header({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
+  const locales: Locale[] = ["uz", "ru", "en"];
+  const labels: Record<Locale, string> = { uz: "UZ", ru: "RU", en: "EN" };
+
   return (
     <header className="sticky top-0 z-50 bg-surface/85 backdrop-blur-lg border-b border-border-light">
       <div className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2.5">
+        <a href={`/${locale}`} className="flex items-center gap-2.5">
           <img src="/icon-192.png" alt="Namozim" width={32} height={32} className="rounded-lg" />
-          <span className="font-[family-name:var(--font-display)] text-lg font-bold text-text">Namozim</span>
+          <span className="font-[family-name:var(--font-display)] text-lg font-bold text-text">{t(locale, "site_name")}</span>
         </a>
 
-        <nav className="hidden md:flex items-center gap-7 text-sm text-text-secondary">
-          <a href="#prayer-times" className="hover:text-primary transition-colors">Namoz vaqtlari</a>
-          <a href="#cities" className="hover:text-primary transition-colors">Shaharlar</a>
-          <a href="#about" className="hover:text-primary transition-colors">Ilova haqida</a>
-          <a href="#download" className="bg-primary text-text-on-primary px-4 py-2 rounded-full text-xs font-semibold hover:bg-primary-dark transition-colors">
-            Yuklab olish
+        <nav className="hidden md:flex items-center gap-6 text-sm text-text-secondary">
+          <a href={`/${locale}#prayer-times`} className="hover:text-primary transition-colors">{t(locale, "nav_prayer_times")}</a>
+          <a href={`/${locale}#cities`} className="hover:text-primary transition-colors">{t(locale, "nav_cities")}</a>
+          <a href={`/${locale}#about`} className="hover:text-primary transition-colors">{t(locale, "nav_about")}</a>
+
+          {/* Language switcher */}
+          <div className="flex items-center border border-border rounded-full overflow-hidden text-xs">
+            {locales.map((l) => (
+              <a key={l} href={`/${l}`}
+                className={`px-2.5 py-1.5 transition-colors ${l === locale ? "bg-primary text-text-on-primary" : "hover:bg-surface-muted"}`}>
+                {labels[l]}
+              </a>
+            ))}
+          </div>
+
+          <a href={`/${locale}#download`} className="bg-primary text-text-on-primary px-4 py-2 rounded-full text-xs font-semibold hover:bg-primary-dark transition-colors">
+            {t(locale, "nav_download")}
           </a>
         </nav>
 
@@ -28,10 +43,15 @@ export function Header() {
       </div>
       {open && (
         <nav className="md:hidden border-t border-border-light bg-surface px-5 py-4 flex flex-col gap-3 text-sm">
-          <a href="#prayer-times" onClick={() => setOpen(false)} className="py-2 text-text-secondary">Namoz vaqtlari</a>
-          <a href="#cities" onClick={() => setOpen(false)} className="py-2 text-text-secondary">Shaharlar</a>
-          <a href="#about" onClick={() => setOpen(false)} className="py-2 text-text-secondary">Ilova haqida</a>
-          <a href="#download" onClick={() => setOpen(false)} className="bg-primary text-text-on-primary px-4 py-3 rounded-full text-center font-semibold">Yuklab olish</a>
+          <a href={`/${locale}#prayer-times`} onClick={() => setOpen(false)} className="py-2 text-text-secondary">{t(locale, "nav_prayer_times")}</a>
+          <a href={`/${locale}#cities`} onClick={() => setOpen(false)} className="py-2 text-text-secondary">{t(locale, "nav_cities")}</a>
+          <a href={`/${locale}#about`} onClick={() => setOpen(false)} className="py-2 text-text-secondary">{t(locale, "nav_about")}</a>
+          <div className="flex gap-2 py-2">
+            {locales.map((l) => (
+              <a key={l} href={`/${l}`} className={`px-3 py-1.5 rounded-full text-xs border ${l === locale ? "bg-primary text-white border-primary" : "border-border"}`}>{labels[l]}</a>
+            ))}
+          </div>
+          <a href={`/${locale}#download`} onClick={() => setOpen(false)} className="bg-primary text-text-on-primary px-4 py-3 rounded-full text-center font-semibold">{t(locale, "nav_download")}</a>
         </nav>
       )}
     </header>

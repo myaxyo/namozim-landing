@@ -2,22 +2,28 @@ import { MetadataRoute } from "next";
 import { CITIES } from "@/data/cities";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://namozim.uz";
+  const base = "https://namozim.uz";
+  const locales = ["uz", "ru", "en"];
 
-  const cityPages = CITIES.map((city) => ({
-    url: `${baseUrl}/${city.slug}`,
+  const homePages = locales.map((l) => ({
+    url: `${base}/${l}`,
     lastModified: new Date(),
     changeFrequency: "daily" as const,
-    priority: 0.8,
+    priority: 1,
   }));
 
-  return [
-    {
-      url: baseUrl,
+  const cityPages = locales.flatMap((l) =>
+    CITIES.map((c) => ({
+      url: `${base}/${l}/${c.slug}`,
       lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1,
-    },
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    }))
+  );
+
+  return [
+    { url: base, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
+    ...homePages,
     ...cityPages,
   ];
 }
