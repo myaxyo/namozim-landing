@@ -35,14 +35,28 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
     setLoading(false);
   }, [dateLocale]);
 
+  const resolveCity = useCallback(async (lat: number, lng: number) => {
+    try {
+      const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=${locale}`);
+      const data = await res.json();
+      const name = data.city || data.locality || data.principalSubdivision || data.countryName;
+      if (name) setCity(name);
+    } catch {
+      setCity(t(locale, "location_auto"));
+    }
+  }, [locale]);
+
   useEffect(() => {
     if (typeof navigator !== "undefined" && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (p) => { fetchTimes(p.coords.latitude, p.coords.longitude); setCity(t(locale, "location_auto")); },
+        (p) => {
+          fetchTimes(p.coords.latitude, p.coords.longitude);
+          resolveCity(p.coords.latitude, p.coords.longitude);
+        },
         () => fetchTimes(41.2995, 69.2401)
       );
     } else fetchTimes(41.2995, 69.2401);
-  }, [fetchTimes, locale]);
+  }, [fetchTimes, resolveCity]);
 
   useEffect(() => {
     if (!times) return;
