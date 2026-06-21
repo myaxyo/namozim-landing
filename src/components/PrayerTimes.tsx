@@ -18,11 +18,20 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
 
   const dateLocale = locale === "ru" ? "ru-RU" : locale === "en" ? "en-US" : "uz-Latn-UZ";
 
+  const formatDate = (d: Date): string => {
+    if (locale === "ru") return d.toLocaleDateString("ru-RU", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    if (locale === "en") return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    // Manual Uzbek formatting since uz-Latn-UZ isn't supported everywhere
+    const weekdays = ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"];
+    const months = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
+    return `${weekdays[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  };
+
   const fetchTimes = useCallback(async (lat: number, lng: number) => {
     setLoading(true);
     try {
       const d = new Date();
-      setDate(d.toLocaleDateString(dateLocale, { weekday: "long", year: "numeric", month: "long", day: "numeric" }));
+      setDate(formatDate(d));
       const ds = `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
       const res = await fetch(`https://api.aladhan.com/v1/timings/${ds}?latitude=${lat}&longitude=${lng}&method=3&school=1`);
       const data = await res.json();
