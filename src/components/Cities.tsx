@@ -1,9 +1,4 @@
-const CITIES = [
-  "Toshkent", "Samarqand", "Buxoro", "Namangan", "Andijon", "Farg'ona",
-  "Qarshi", "Nukus", "Navoiy", "Jizzax", "Urganch", "Termiz",
-  "Chirchiq", "Qo'qon", "Marg'ilon", "Guliston", "Shahrisabz", "Xiva",
-  "Olmaliq", "Angren", "Denov", "Bekobod", "Zarafshon", "Kogon",
-];
+import { CITIES } from "@/data/cities";
 
 export function Cities() {
   return (
@@ -14,14 +9,18 @@ export function Cities() {
             O&apos;zbekiston shaharlari bo&apos;yicha namoz vaqtlari
           </h2>
           <p className="text-text-secondary text-sm">
-            30+ shahar uchun aniq namoz vaqtlari avtomatik joylashuv asosida hisoblanadi
+            Shaharni tanlang — aniq namoz vaqtlarini ko&apos;ring
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
           {CITIES.map((c) => (
-            <span key={c} className="bg-surface border border-border px-3 py-1.5 rounded-full text-xs text-text-secondary hover:border-primary hover:text-primary transition-colors cursor-default">
-              {c}
-            </span>
+            <a
+              key={c.slug}
+              href={`/${c.slug}`}
+              className="bg-surface border border-border px-3 py-1.5 rounded-full text-xs text-text-secondary hover:border-primary hover:text-primary hover:bg-primary-soft transition-colors"
+            >
+              {c.name}
+            </a>
           ))}
         </div>
       </div>

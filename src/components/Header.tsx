@@ -7,9 +7,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-surface/85 backdrop-blur-lg border-b border-border-light">
       <div className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
         <a href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-hero-from to-hero-to flex items-center justify-center">
-            <span className="text-white font-bold text-xs">N</span>
-          </div>
+          <img src="/icon.png" alt="Namozim" width={32} height={32} className="rounded-lg" />
           <span className="font-[family-name:var(--font-display)] text-lg font-bold text-text">Namozim</span>
         </a>
 
