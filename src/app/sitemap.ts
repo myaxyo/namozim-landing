@@ -12,6 +12,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 1,
   }));
 
+  const citiesPages = locales.map((l) => ({
+    url: `${base}/${l}/shaharlar`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
+  }));
+
   const cityPages = locales.flatMap((l) =>
     CITIES.map((c) => ({
       url: `${base}/${l}/${c.slug}`,
@@ -24,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: base, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
     ...homePages,
+    ...citiesPages,
     ...cityPages,
   ];
 }

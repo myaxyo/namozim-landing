@@ -8,7 +8,7 @@ export function Footer({ locale }: { locale: Locale }) {
           <p>&copy; {new Date().getFullYear()} Namozim. {t(locale, "footer_rights")}</p>
           <div className="flex gap-5">
             <a href={`/${locale}#prayer-times`} className="hover:text-primary transition-colors">{t(locale, "nav_prayer_times")}</a>
-            <a href={`/${locale}#cities`} className="hover:text-primary transition-colors">{t(locale, "nav_cities")}</a>
+            <a href={`/${locale}/shaharlar`} className="hover:text-primary transition-colors">{t(locale, "nav_cities")}</a>
             <a href={`/${locale}#download`} className="hover:text-primary transition-colors">{t(locale, "nav_download")}</a>
           </div>
         </div>

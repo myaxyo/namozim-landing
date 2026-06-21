@@ -17,7 +17,7 @@ export function Header({ locale }: { locale: Locale }) {
 
         <nav className="hidden md:flex items-center gap-6 text-sm text-text-secondary">
           <a href={`/${locale}#prayer-times`} className="hover:text-primary transition-colors">{t(locale, "nav_prayer_times")}</a>
-          <a href={`/${locale}#cities`} className="hover:text-primary transition-colors">{t(locale, "nav_cities")}</a>
+          <a href={`/${locale}/shaharlar`} className="hover:text-primary transition-colors">{t(locale, "nav_cities")}</a>
           <a href={`/${locale}#about`} className="hover:text-primary transition-colors">{t(locale, "nav_about")}</a>
 
           {/* Language switcher */}
@@ -44,7 +44,7 @@ export function Header({ locale }: { locale: Locale }) {
       {open && (
         <nav className="md:hidden border-t border-border-light bg-surface px-5 py-4 flex flex-col gap-3 text-sm">
           <a href={`/${locale}#prayer-times`} onClick={() => setOpen(false)} className="py-2 text-text-secondary">{t(locale, "nav_prayer_times")}</a>
-          <a href={`/${locale}#cities`} onClick={() => setOpen(false)} className="py-2 text-text-secondary">{t(locale, "nav_cities")}</a>
+          <a href={`/${locale}/shaharlar`} onClick={() => setOpen(false)} className="py-2 text-text-secondary">{t(locale, "nav_cities")}</a>
           <a href={`/${locale}#about`} onClick={() => setOpen(false)} className="py-2 text-text-secondary">{t(locale, "nav_about")}</a>
           <div className="flex gap-2 py-2">
             {locales.map((l) => (

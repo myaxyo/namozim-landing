@@ -10,12 +10,17 @@ export function Cities({ locale }: { locale: Locale }) {
           <p className="text-text-secondary text-sm">{t(locale, "cities_subtitle")}</p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
-          {CITIES.map((c) => (
+          {CITIES.slice(0, 20).map((c) => (
             <a key={c.slug} href={`/${locale}/${c.slug}`}
               className="bg-surface border border-border px-3 py-1.5 rounded-full text-xs text-text-secondary hover:border-primary hover:text-primary hover:bg-primary-soft transition-colors">
               {getCityName(c, locale)}
             </a>
           ))}
+        </div>
+        <div className="text-center mt-6">
+          <a href={`/${locale}/shaharlar`} className="inline-flex items-center gap-1.5 text-primary text-sm font-medium hover:underline">
+            {locale === "ru" ? "Все города" : locale === "en" ? "All cities" : "Barcha shaharlar"} &rarr;
+          </a>
         </div>
       </div>
     </section>
