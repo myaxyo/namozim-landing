@@ -1,17 +1,21 @@
-import { Hero } from "@/components/Hero";
-import { Features } from "@/components/Features";
-import { PrayerTimesWidget } from "@/components/PrayerTimesWidget";
+import { Header } from "@/components/Header";
+import { PrayerTimes } from "@/components/PrayerTimes";
+import { Cities } from "@/components/Cities";
+import { About } from "@/components/About";
+import { Download } from "@/components/Download";
 import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <Navbar />
-      <Hero />
-      <Features />
-      <PrayerTimesWidget />
+    <>
+      <Header />
+      <main>
+        <PrayerTimes />
+        <Cities />
+        <About />
+        <Download />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

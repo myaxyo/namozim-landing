@@ -5,38 +5,51 @@ import "./globals.css";
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
-  variable: "--font-display",
+  variable: "--font-cormorant",
   display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-body",
+  variable: "--font-inter",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Namozim — Namoz Vaqtlari, Tasbih, Zikr",
+  title: "Namoz Vaqtlari 2026 — O'zbekiston | Bomdod, Peshin, Asr, Shom, Xufton",
   description:
-    "O'zbekiston uchun aniq namoz vaqtlari, tasbih hisoblagich va namoz kuzatish. Hanafiy mazhabiga mos. Bepul yuklab oling.",
+    "O'zbekiston bo'ylab bugungi aniq namoz vaqtlari. Toshkent, Samarqand, Buxoro, Namangan, Andijon va boshqa shaharlar. Hanafiy mazhab, Muslim World League usuli. Bepul onlayn xizmat.",
   keywords: [
-    "namoz vaqti",
     "namoz vaqtlari",
+    "namoz vaqti",
+    "namoz vaqtlari bugun",
+    "namoz vaqtlari toshkent",
+    "bomdod vaqti",
+    "peshin vaqti",
+    "asr vaqti",
+    "shom vaqti",
+    "xufton vaqti",
+    "prayer times uzbekistan",
+    "prayer times tashkent",
+    "namoz",
+    "O'zbekiston",
     "tasbih",
     "zikr",
-    "islom",
-    "muslim",
-    "O'zbekiston",
-    "prayer times",
-    "uzbekistan",
   ],
   openGraph: {
-    title: "Namozim — Namoz Vaqtlari, Tasbih",
-    description: "O'zbekiston uchun aniq namoz vaqtlari va tasbih hisoblagich",
+    title: "Namoz Vaqtlari — O'zbekiston bo'ylab aniq namoz vaqtlari",
+    description: "Bugungi namoz vaqtlari: Bomdod, Peshin, Asr, Shom, Xufton. Hanafiy mazhab.",
     url: "https://namozim.uz",
     siteName: "Namozim",
     locale: "uz_UZ",
     type: "website",
+  },
+  alternates: {
+    canonical: "https://namozim.uz",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -47,6 +60,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uz" className={`${cormorant.variable} ${inter.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Namozim — Namoz Vaqtlari",
+              url: "https://namozim.uz",
+              description: "O'zbekiston bo'ylab aniq namoz vaqtlari",
+              inLanguage: "uz",
+              publisher: {
+                "@type": "Organization",
+                name: "Namozim",
+                url: "https://namozim.uz",
+              },
+            }),
+          }}
+        />
+      </head>
       <body className="antialiased">{children}</body>
     </html>
   );
