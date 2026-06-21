@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0E7C6B;
+  --color-primary-light: #4EA998;
+  --color-primary-dark: #0A5D4F;
+  --color-primary-soft: #DDF2ED;
+  --color-accent: #C79B3B;
+  --color-accent-light: #E1BC68;
+  --color-accent-dark: #A67A23;
+  --color-background: #F7F0E4;
+  --color-background-secondary: #F2E8D9;
+  --color-surface: #FFFDF8;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-muted: #F7EFE2;
+  --color-text: #1F1A17;
+  --color-text-secondary: #5B5046;
+  --color-text-tertiary: #8A7C6A;
+  --color-text-on-primary: #FFFDF7;
+  --color-border: #D9C8AE;
+  --color-border-light: #EADBC7;
+  --color-ornament: #A67A23;
+  --color-hero-from: #0D6F62;
+  --color-hero-to: #184C6A;
+
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "Inter", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* Islamic geometric pattern background */
+.pattern-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%23A67A23' stroke-width='0.5' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-hero-from), var(--color-hero-to));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
