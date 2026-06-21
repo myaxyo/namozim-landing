@@ -78,8 +78,8 @@ export default function RootLayout({
               inLanguage: "uz",
               publisher: {
                 "@type": "Organization",
-                name: "Namozim",
-                url: "https://namozim.uz",
+                name: "Prompter MChJ",
+                url: "https://prompter.uz",
               },
             }),
           }}

@@ -6,6 +6,12 @@ export function Footer({ locale }: { locale: Locale }) {
       <div className="max-w-5xl mx-auto px-5">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-text-muted">
           <p>&copy; {new Date().getFullYear()} Namozim. {t(locale, "footer_rights")}</p>
+          <p className="mt-1">
+            <a href="https://prompter.uz" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+              Prompter MChJ
+            </a>{" "}
+            {locale === "ru" ? "продукт" : locale === "en" ? "product" : "mahsuloti"}
+          </p>
           <div className="flex gap-5">
             <a href={`/${locale}#prayer-times`} className="hover:text-primary transition-colors">{t(locale, "nav_prayer_times")}</a>
             <a href={`/${locale}/shaharlar`} className="hover:text-primary transition-colors">{t(locale, "nav_cities")}</a>
