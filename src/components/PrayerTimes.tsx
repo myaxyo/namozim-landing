@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Locale, t } from "@/data/translations";
 
 interface Times {
@@ -8,30 +8,31 @@ interface Times {
 
 const ICONS: Record<string, string> = { fajr: "\u{1F319}", sunrise: "\u{1F305}", dhuhr: "\u{2600}\u{FE0F}", asr: "\u{1F324}", maghrib: "\u{1F307}", isha: "\u{2728}" };
 
+const PLACEHOLDER_TIMES: Times = { fajr: "--:--", sunrise: "--:--", dhuhr: "--:--", asr: "--:--", maghrib: "--:--", isha: "--:--" };
+
+function formatDateUz(d: Date): string {
+  const weekdays = ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"];
+  const months = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
+  return `${weekdays[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function formatDate(d: Date, locale: Locale): string {
+  if (locale === "ru") return d.toLocaleDateString("ru-RU", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  if (locale === "en") return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  return formatDateUz(d);
+}
+
 export function PrayerTimes({ locale }: { locale: Locale }) {
   const [times, setTimes] = useState<Times | null>(null);
-  const [city, setCity] = useState("Toshkent");
+  const [city, setCity] = useState("");
   const [countdown, setCountdown] = useState("");
   const [nextPrayer, setNextPrayer] = useState("fajr");
-  const [loading, setLoading] = useState(true);
-  const [date, setDate] = useState("");
-
-  const dateLocale = locale === "ru" ? "ru-RU" : locale === "en" ? "en-US" : "uz-Latn-UZ";
-
-  const formatDate = (d: Date): string => {
-    if (locale === "ru") return d.toLocaleDateString("ru-RU", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-    if (locale === "en") return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-    // Manual Uzbek formatting since uz-Latn-UZ isn't supported everywhere
-    const weekdays = ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"];
-    const months = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
-    return `${weekdays[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-  };
+  const [date] = useState(() => formatDate(new Date(), locale));
+  const initialized = useRef(false);
 
   const fetchTimes = useCallback(async (lat: number, lng: number) => {
-    setLoading(true);
     try {
       const d = new Date();
-      setDate(formatDate(d));
       const ds = `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
       const res = await fetch(`https://api.aladhan.com/v1/timings/${ds}?latitude=${lat}&longitude=${lng}&method=3&school=1`);
       const data = await res.json();
@@ -41,8 +42,7 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
         setTimes({ fajr: clean(tm.Fajr), sunrise: clean(tm.Sunrise), dhuhr: clean(tm.Dhuhr), asr: clean(tm.Asr), maghrib: clean(tm.Maghrib), isha: clean(tm.Isha) });
       }
     } catch { /* silent */ }
-    setLoading(false);
-  }, [dateLocale]);
+  }, []);
 
   const resolveCity = useCallback(async (lat: number, lng: number) => {
     try {
@@ -51,22 +51,32 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
       const name = data.city || data.locality || data.principalSubdivision || data.countryName;
       if (name) setCity(name);
     } catch {
-      setCity(t(locale, "location_auto"));
+      // silent — city stays empty until resolved
     }
   }, [locale]);
 
   useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+
     if (typeof navigator !== "undefined" && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (p) => {
           fetchTimes(p.coords.latitude, p.coords.longitude);
           resolveCity(p.coords.latitude, p.coords.longitude);
         },
-        () => fetchTimes(41.2995, 69.2401)
+        () => {
+          setCity("Toshkent");
+          fetchTimes(41.2995, 69.2401);
+        }
       );
-    } else fetchTimes(41.2995, 69.2401);
+    } else {
+      setCity("Toshkent");
+      fetchTimes(41.2995, 69.2401);
+    }
   }, [fetchTimes, resolveCity]);
 
+  // Countdown — only depends on times, doesn't re-render the whole component
   useEffect(() => {
     if (!times) return;
     const tick = () => {
@@ -84,47 +94,64 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
       const d = nSec-sec;
       setCountdown(`${Math.floor(d/3600)}:${String(Math.floor((d%3600)/60)).padStart(2,"0")}:${String(d%60).padStart(2,"0")}`);
     };
-    tick(); const i = setInterval(tick, 1000); return () => clearInterval(i);
+    tick();
+    const i = setInterval(tick, 1000);
+    return () => clearInterval(i);
   }, [times]);
+
+  const displayTimes = times || PLACEHOLDER_TIMES;
+  const isLoaded = !!times;
 
   return (
     <section id="prayer-times" className="py-16 md:py-24">
       <div className="max-w-3xl mx-auto px-5">
         <div className="text-center mb-10">
           <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-text mb-3">{t(locale, "hero_title")}</h1>
-          <p className="text-text-secondary text-base md:text-lg">{city} &mdash; {date}</p>
+          <p className="text-text-secondary text-base md:text-lg">
+            {city ? <>{city} &mdash; </> : null}{date}
+          </p>
           <p className="text-text-muted text-sm mt-1">{t(locale, "hero_method")}</p>
         </div>
 
-        {loading ? (
-          <div className="bg-surface rounded-2xl border border-border p-12 text-center">
-            <div className="animate-spin w-7 h-7 border-2 border-primary border-t-transparent rounded-full mx-auto" />
+        <div className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm">
+          {/* Countdown header */}
+          <div className="bg-gradient-to-r from-hero-from to-hero-to px-6 py-8 text-center">
+            {isLoaded ? (
+              <>
+                <p className="text-white/70 text-xs uppercase tracking-widest mb-1">{t(locale, nextPrayer)} {t(locale, "countdown_label")}</p>
+                <p className="text-white font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold tabular-nums">{countdown}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-white/70 text-xs uppercase tracking-widest mb-1">&nbsp;</p>
+                <div className="flex justify-center">
+                  <div className="animate-spin w-7 h-7 border-2 border-white border-t-transparent rounded-full" />
+                </div>
+              </>
+            )}
           </div>
-        ) : times && (
-          <div className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm">
-            <div className="bg-gradient-to-r from-hero-from to-hero-to px-6 py-8 text-center">
-              <p className="text-white/70 text-xs uppercase tracking-widest mb-1">{t(locale, nextPrayer)} {t(locale, "countdown_label")}</p>
-              <p className="text-white font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold tabular-nums">{countdown}</p>
-            </div>
-            <div className="divide-y divide-border-light">
-              {(["fajr","sunrise","dhuhr","asr","maghrib","isha"] as const).map((k) => {
-                const active = k === nextPrayer;
-                return (
-                  <div key={k} className={`flex items-center justify-between px-6 py-4 ${active ? "bg-primary-soft" : "hover:bg-surface-muted"} transition-colors`}>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xl w-8 text-center">{ICONS[k]}</span>
-                      <div>
-                        <p className={`font-medium text-sm ${active ? "text-primary font-semibold" : "text-text"}`}>{t(locale, k)}</p>
-                        {active && <p className="text-primary text-[11px]">{t(locale, "next_prayer")}</p>}
-                      </div>
+
+          {/* Times list — always visible, shows --:-- until loaded */}
+          <div className="divide-y divide-border-light">
+            {(["fajr","sunrise","dhuhr","asr","maghrib","isha"] as const).map((k) => {
+              const active = isLoaded && k === nextPrayer;
+              return (
+                <div key={k} className={`flex items-center justify-between px-6 py-4 ${active ? "bg-primary-soft" : "hover:bg-surface-muted"} transition-colors`}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl w-8 text-center">{ICONS[k]}</span>
+                    <div>
+                      <p className={`font-medium text-sm ${active ? "text-primary font-semibold" : "text-text"}`}>{t(locale, k)}</p>
+                      {active && <p className="text-primary text-[11px]">{t(locale, "next_prayer")}</p>}
                     </div>
-                    <time className={`font-[family-name:var(--font-display)] text-xl font-bold tabular-nums ${active ? "text-primary" : "text-text"}`}>{times[k]}</time>
                   </div>
-                );
-              })}
-            </div>
+                  <time className={`font-[family-name:var(--font-display)] text-xl font-bold tabular-nums ${active ? "text-primary" : isLoaded ? "text-text" : "text-text-muted"}`}>
+                    {displayTimes[k]}
+                  </time>
+                </div>
+              );
+            })}
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
