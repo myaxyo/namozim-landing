@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -73,10 +72,11 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Namozim — Namoz Vaqtlari",
+              name: "Namozim",
+              alternateName: ["Namozim.uz", "Намозим"],
               url: "https://namozim.uz",
               description: "O'zbekiston bo'ylab aniq namoz vaqtlari",
-              inLanguage: "uz",
+              inLanguage: ["uz", "ru", "en"],
               publisher: {
                 "@type": "Organization",
                 name: "Prompter MChJ",
@@ -88,7 +88,6 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         {children}
-        <Analytics />
       </body>
     </html>
   );
