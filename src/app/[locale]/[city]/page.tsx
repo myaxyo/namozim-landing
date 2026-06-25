@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CITIES, getCityBySlug, getCityName, getCityRegion } from "@/data/cities";
+import { getDistrictsByCity, getDistrictName } from "@/data/districts";
 import { Locale, t } from "@/data/translations";
+import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
 import { Header } from "@/components/Header";
 import { Download } from "@/components/Download";
@@ -25,6 +27,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!city) return {};
   const name = getCityName(city, l);
 
+  // Fetch actual prayer times for meta description
+  const times = await fetchPrayerTimesServer(city.lat, city.lng);
+  const timesStr = times
+    ? `Bomdod: ${times.fajr} | Peshin: ${times.dhuhr} | Asr: ${times.asr} | Shom: ${times.maghrib} | Xufton: ${times.isha}`
+    : "";
+
   const titles: Record<Locale, string> = {
     uz: `Namoz vaqtlari ${name} 2026 \u2014 Bomdod, Peshin, Asr, Shom, Xufton`,
     ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 ${name} 2026 \u2014 \u0424\u0430\u0434\u0436\u0440, \u0417\u0443\u0445\u0440, \u0410\u0441\u0440, \u041C\u0430\u0433\u0440\u0438\u0431, \u0418\u0448\u0430`,
@@ -32,9 +40,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 
   const descs: Record<Locale, string> = {
-    uz: `${name} shahri uchun bugungi namoz vaqtlari. ${getCityRegion(city, l)}. Hanafiy mazhab.`,
-    ru: `\u0422\u043E\u0447\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 \u0432 ${name}. ${getCityRegion(city, l)}. \u0425\u0430\u043D\u0430\u0444\u0438\u0442\u0441\u043A\u0438\u0439 \u043C\u0430\u0437\u0445\u0430\u0431.`,
-    en: `Today's prayer times for ${name}. ${getCityRegion(city, l)}. Hanafi school.`,
+    uz: `${name} namoz vaqtlari bugun. ${timesStr}. Hanafiy mazhab.`,
+    ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 \u0432 ${name} \u0441\u0435\u0433\u043E\u0434\u043D\u044F. ${timesStr}. \u0425\u0430\u043D\u0430\u0444\u0438\u0442\u0441\u043A\u0438\u0439 \u043C\u0430\u0437\u0445\u0430\u0431.`,
+    en: `Prayer times in ${name} today. ${timesStr}. Hanafi school.`,
   };
 
   return {
@@ -77,6 +85,34 @@ export default async function CityPage({ params }: Props) {
                   </a>
                 ))}
               </div>
+            </div>
+
+            {/* Districts */}
+            {(() => {
+              const districts = getDistrictsByCity(slug);
+              if (districts.length === 0) return null;
+              return (
+                <div className="mt-10">
+                  <h3 className="text-sm font-semibold text-text mb-3">
+                    {l === "ru" ? "Районы:" : l === "en" ? "Districts:" : "Tumanlar:"}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {districts.map((d) => (
+                      <a key={d.slug} href={`/${locale}/${slug}/${d.slug}`}
+                        className="bg-surface-muted border border-border px-3 py-1.5 rounded-full text-xs text-text-secondary hover:text-primary hover:border-primary transition-colors">
+                        {getDistrictName(d, l)}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Monthly link */}
+            <div className="mt-8">
+              <a href={`/${locale}/${slug}/oylik`} className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline">
+                {l === "ru" ? "Месячный календарь" : l === "en" ? "Monthly calendar" : "Oylik taqvim"} &rarr;
+              </a>
             </div>
           </div>
         </section>

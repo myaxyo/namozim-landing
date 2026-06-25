@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { CITIES } from "@/data/cities";
+import { DISTRICTS } from "@/data/districts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://namozim.uz";
@@ -28,10 +29,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
+  const monthlyPages = locales.flatMap((l) =>
+    CITIES.map((c) => ({
+      url: `${base}/${l}/${c.slug}/oylik`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+    }))
+  );
+
+  const districtPages = locales.flatMap((l) =>
+    DISTRICTS.map((d) => ({
+      url: `${base}/${l}/${d.citySlug}/${d.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+    }))
+  );
+
   return [
     { url: base, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
     ...homePages,
     ...citiesPages,
     ...cityPages,
+    ...monthlyPages,
+    ...districtPages,
   ];
 }
