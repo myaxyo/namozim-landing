@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { toPng } from "html-to-image";
 import { City, getCityName, getCityRegion } from "@/data/cities";
 import { Locale, t } from "@/data/translations";
 
@@ -15,6 +16,7 @@ export function CityPrayerTimes({ city, locale }: { city: City; locale: Locale }
   const [nextPrayer, setNextPrayer] = useState("fajr");
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState("");
+  const cardRef = useRef<HTMLDivElement>(null);
   const dateLocale = locale === "ru" ? "ru-RU" : locale === "en" ? "en-US" : "uz-Latn-UZ";
 
   const formatDate = (d: Date): string => {
@@ -78,7 +80,7 @@ export function CityPrayerTimes({ city, locale }: { city: City; locale: Locale }
             <div className="animate-spin w-7 h-7 border-2 border-primary border-t-transparent rounded-full mx-auto" />
           </div>
         ) : times && (
-          <div className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm">
+          <div ref={cardRef} className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm">
             <div className="bg-gradient-to-r from-hero-from to-hero-to px-6 py-8 text-center">
               <p className="text-white/70 text-xs uppercase tracking-widest mb-1">{t(locale, nextPrayer)} {t(locale, "countdown_label")}</p>
               <p className="text-white font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold tabular-nums">{countdown}</p>
@@ -101,6 +103,32 @@ export function CityPrayerTimes({ city, locale }: { city: City; locale: Locale }
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {/* Download as image button */}
+        {!loading && times && (
+          <div className="mt-4 text-center">
+            <button
+              onClick={async () => {
+                if (!cardRef.current) return;
+                try {
+                  const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, backgroundColor: "#FAFAF7" });
+                  const link = document.createElement("a");
+                  link.download = `namoz-vaqtlari-${name}.png`;
+                  link.href = dataUrl;
+                  link.click();
+                } catch {}
+              }}
+              className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-primary border border-border hover:border-primary px-4 py-2.5 rounded-full transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              {locale === "ru" ? "Скачать как картинку" : locale === "en" ? "Download as image" : "Rasm sifatida yuklash"}
+            </button>
           </div>
         )}
       </div>
