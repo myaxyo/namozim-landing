@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 import { CITIES } from "@/data/cities";
 import { DISTRICTS } from "@/data/districts";
+import { REGIONS } from "@/data/regions";
+import { PRAYERS } from "@/data/prayers";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://namozim.uz";
@@ -47,12 +49,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
+  const regionPages = locales.flatMap((l) =>
+    REGIONS.map((r) => ({
+      url: `${base}/${l}/viloyat/${r.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.85,
+    }))
+  );
+
+  const prayerPages = locales.flatMap((l) =>
+    CITIES.flatMap((c) =>
+      PRAYERS.map((p) => ({
+        url: `${base}/${l}/${c.slug}/${p.slug}`,
+        lastModified: new Date(),
+        changeFrequency: "daily" as const,
+        priority: 0.7,
+      }))
+    )
+  );
+
   return [
     { url: base, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
     ...homePages,
     ...citiesPages,
+    ...regionPages,
     ...cityPages,
     ...monthlyPages,
+    ...prayerPages,
     ...districtPages,
   ];
 }

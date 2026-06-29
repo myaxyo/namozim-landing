@@ -34,15 +34,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : "";
 
   const titles: Record<Locale, string> = {
-    uz: `Namoz vaqtlari ${name} 2026 \u2014 Bomdod, Peshin, Asr, Shom, Xufton`,
-    ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 ${name} 2026 \u2014 \u0424\u0430\u0434\u0436\u0440, \u0417\u0443\u0445\u0440, \u0410\u0441\u0440, \u041C\u0430\u0433\u0440\u0438\u0431, \u0418\u0448\u0430`,
-    en: `Prayer Times ${name} 2026 \u2014 Fajr, Dhuhr, Asr, Maghrib, Isha`,
+    uz: `Namoz vaqtlari ${name} bugun 2026 | Bugun namoz vaqti`,
+    ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 ${name} \u0441\u0435\u0433\u043E\u0434\u043D\u044F 2026`,
+    en: `Prayer Times ${name} Today 2026 | Fajr, Dhuhr, Asr, Maghrib, Isha`,
   };
 
   const descs: Record<Locale, string> = {
-    uz: `${name} namoz vaqtlari bugun. ${timesStr}. Hanafiy mazhab.`,
-    ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 \u0432 ${name} \u0441\u0435\u0433\u043E\u0434\u043D\u044F. ${timesStr}. \u0425\u0430\u043D\u0430\u0444\u0438\u0442\u0441\u043A\u0438\u0439 \u043C\u0430\u0437\u0445\u0430\u0431.`,
-    en: `Prayer times in ${name} today. ${timesStr}. Hanafi school.`,
+    uz: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab. Bomdod, Peshin, Asr, Shom, Xufton.`,
+    ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 \u0432 ${name} \u0441\u0435\u0433\u043E\u0434\u043D\u044F: ${timesStr}. \u0425\u0430\u043D\u0430\u0444\u0438\u0442\u0441\u043A\u0438\u0439 \u043C\u0430\u0437\u0445\u0430\u0431.`,
+    en: `Prayer times in ${name} today: ${timesStr}. Hanafi school.`,
   };
 
   return {
