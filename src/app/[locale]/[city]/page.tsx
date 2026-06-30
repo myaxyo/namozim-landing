@@ -5,6 +5,7 @@ import { getDistrictsByCity, getDistrictName } from "@/data/districts";
 import { Locale, t } from "@/data/translations";
 import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
+import { PrayerTimesImage } from "@/components/PrayerTimesImage";
 import { Header } from "@/components/Header";
 import { Download } from "@/components/Download";
 import { Footer } from "@/components/Footer";
@@ -68,12 +69,17 @@ export default async function CityPage({ params }: Props) {
   if (!city) notFound();
   const name = getCityName(city, l);
   const region = getCityRegion(city, l);
+  const serverTimes = await fetchPrayerTimesServer(city.lat, city.lng);
 
   return (
     <>
       <Header locale={l} />
       <main>
         <CityPrayerTimes city={city} locale={l} />
+
+        {/* Static visual card for Google Images indexing */}
+        <PrayerTimesImage locale={l} city={name} times={serverTimes} />
+
         <section className="py-12">
           <div className="max-w-3xl mx-auto px-5">
             <article className="text-text-secondary space-y-3 text-sm leading-relaxed">
