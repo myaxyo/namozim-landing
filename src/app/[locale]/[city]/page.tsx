@@ -48,6 +48,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: titles[l],
     description: descs[l],
+    openGraph: {
+      title: titles[l],
+      description: descs[l],
+      url: `https://namozim.uz/${locale}/${slug}`,
+      images: [`https://namozim.uz/${locale}/${slug}/opengraph-image`],
+    },
     alternates: {
       canonical: `https://namozim.uz/${locale}/${slug}`,
       languages: { uz: `/uz/${slug}`, ru: `/ru/${slug}`, en: `/en/${slug}` },
