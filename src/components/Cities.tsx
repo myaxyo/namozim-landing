@@ -19,7 +19,7 @@ export function Cities({ locale }: { locale: Locale }) {
         </div>
         <div className="text-center mt-6">
           <a href={`/${locale}/shaharlar`} className="inline-flex items-center gap-1.5 text-primary text-sm font-medium hover:underline">
-            {locale === "ru" ? "Все города" : locale === "en" ? "All cities" : "Barcha shaharlar"} &rarr;
+            {locale === "ru" ? "Все города" : locale === "en" ? "All cities" : locale === "uz-cyrl" ? "Барча шаҳарлар" : "Barcha shaharlar"} &rarr;
           </a>
         </div>
       </div>

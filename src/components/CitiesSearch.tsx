@@ -59,13 +59,13 @@ export function CitiesSearch({ locale }: { locale: Locale }) {
 
       {/* Results count */}
       <p className="text-text-muted text-xs mb-6">
-        {filtered.length} {locale === "ru" ? "городов" : locale === "en" ? "cities" : "shahar"}
+        {filtered.length} {locale === "ru" ? "городов" : locale === "en" ? "cities" : locale === "uz-cyrl" ? "шаҳар" : "shahar"}
       </p>
 
       {/* Grouped city list */}
       {grouped.length === 0 ? (
         <div className="text-center py-12 text-text-muted">
-          {locale === "ru" ? "Ничего не найдено" : locale === "en" ? "No results found" : "Hech narsa topilmadi"}
+          {locale === "ru" ? "Ничего не найдено" : locale === "en" ? "No results found" : locale === "uz-cyrl" ? "Ҳеч нарса топилмади" : "Hech narsa topilmadi"}
         </div>
       ) : (
         <div className="space-y-8">

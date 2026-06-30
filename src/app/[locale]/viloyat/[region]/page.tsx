@@ -73,14 +73,14 @@ export default async function RegionPage({ params }: Props) {
         <section className="py-12">
           <div className="max-w-3xl mx-auto px-5">
             <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-text mb-4">
-              {name} — {l === "ru" ? "города и районы" : l === "en" ? "cities and districts" : "shaharlar va tumanlar"}
+              {name} — {l === "ru" ? "города и районы" : l === "en" ? "cities and districts" : l === "uz-cyrl" ? "шаҳарлар ва туманлар" : "shaharlar va tumanlar"}
             </h2>
 
             {/* Cities in this region */}
             {regionCities.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-text-secondary mb-3">
-                  {l === "ru" ? "Города:" : l === "en" ? "Cities:" : "Shaharlar:"}
+                  {l === "ru" ? "Города:" : l === "en" ? "Cities:" : l === "uz-cyrl" ? "Шаҳарлар:" : "Shaharlar:"}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {regionCities.map((c) => (
@@ -113,7 +113,7 @@ export default async function RegionPage({ params }: Props) {
             {/* Other regions */}
             <div className="mt-10">
               <h3 className="text-sm font-semibold text-text mb-3">
-                {l === "ru" ? "Другие области:" : l === "en" ? "Other regions:" : "Boshqa viloyatlar:"}
+                {l === "ru" ? "Другие области:" : l === "en" ? "Other regions:" : l === "uz-cyrl" ? "Бошқа вилоятлар:" : "Boshqa viloyatlar:"}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {REGIONS.filter((r) => r.slug !== slug).map((r) => (

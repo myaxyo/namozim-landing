@@ -108,7 +108,7 @@ export default async function CityPage({ params }: Props) {
               return (
                 <div className="mt-10">
                   <h3 className="text-sm font-semibold text-text mb-3">
-                    {l === "ru" ? "Районы:" : l === "en" ? "Districts:" : "Tumanlar:"}
+                    {l === "ru" ? "Районы:" : l === "en" ? "Districts:" : l === "uz-cyrl" ? "Туманлар:" : "Tumanlar:"}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {districts.map((d) => (
@@ -125,7 +125,7 @@ export default async function CityPage({ params }: Props) {
             {/* Monthly link */}
             <div className="mt-8">
               <a href={`/${locale}/${slug}/oylik`} className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline">
-                {l === "ru" ? "Месячный календарь" : l === "en" ? "Monthly calendar" : "Oylik taqvim"} &rarr;
+                {l === "ru" ? "Месячный календарь" : l === "en" ? "Monthly calendar" : l === "uz-cyrl" ? "Ойлик тақвим" : "Oylik taqvim"} &rarr;
               </a>
             </div>
           </div>

@@ -50,7 +50,7 @@ export function PrayerPage({ city, prayer, locale }: { city: City; prayer: Praye
           ) : (
             <>
               <p className="text-white/70 text-sm uppercase tracking-wider mb-2">
-                {locale === "ru" ? "Сегодня" : locale === "en" ? "Today" : "Bugun"}
+                {locale === "ru" ? "Сегодня" : locale === "en" ? "Today" : locale === "uz-cyrl" ? "Бугун" : "Bugun"}
               </p>
               <p className="text-white font-[family-name:var(--font-display)] text-6xl md:text-7xl font-bold tabular-nums">
                 {time}
@@ -67,7 +67,7 @@ export function PrayerPage({ city, prayer, locale }: { city: City; prayer: Praye
         {/* Other prayers for this city */}
         <div className="mb-8">
           <h2 className="text-sm font-semibold text-text mb-3">
-            {locale === "ru" ? "Все намазы" : locale === "en" ? "All prayers" : "Barcha namozlar"} — {cityName}:
+            {locale === "ru" ? "Все намазы" : locale === "en" ? "All prayers" : locale === "uz-cyrl" ? "Барча намозлар" : "Barcha namozlar"} — {cityName}:
           </h2>
           <div className="flex flex-wrap gap-2">
             {PRAYERS.filter((p) => p.slug !== prayer.slug).map((p) => (
@@ -83,7 +83,7 @@ export function PrayerPage({ city, prayer, locale }: { city: City; prayer: Praye
         {/* Same prayer in other cities */}
         <div>
           <h2 className="text-sm font-semibold text-text mb-3">
-            {prayerName} {locale === "ru" ? "в других городах:" : locale === "en" ? "in other cities:" : "boshqa shaharlarda:"}
+            {prayerName} {locale === "ru" ? "в других городах:" : locale === "en" ? "in other cities:" : locale === "uz-cyrl" ? "бошқа шаҳарларда:" : "boshqa shaharlarda:"}
           </h2>
           <div className="flex flex-wrap gap-2">
             {CITIES.filter((c) => c.slug !== city.slug).slice(0, 12).map((c) => (

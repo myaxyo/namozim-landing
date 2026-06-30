@@ -20,6 +20,11 @@ function formatDateUz(d: Date): string {
 function formatDate(d: Date, locale: Locale): string {
   if (locale === "ru") return d.toLocaleDateString("ru-RU", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
   if (locale === "en") return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  if (locale === "uz-cyrl") {
+    const weekdays = ["Якшанба", "Душанба", "Сешанба", "Чоршанба", "Пайшанба", "Жума", "Шанба"];
+    const months = ["январ", "феврал", "март", "апрел", "май", "июн", "июл", "август", "сентябр", "октябр", "ноябр", "декабр"];
+    return `${weekdays[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  }
   return formatDateUz(d);
 }
 
@@ -176,7 +181,7 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
-              {locale === "ru" ? "Скачать как картинку" : locale === "en" ? "Download as image" : "Rasm sifatida yuklash"}
+              {locale === "ru" ? "Скачать как картинку" : locale === "en" ? "Download as image" : locale === "uz-cyrl" ? "Расм сифатида юклаш" : "Rasm sifatida yuklash"}
             </button>
           </div>
         )}

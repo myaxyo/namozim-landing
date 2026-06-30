@@ -119,7 +119,7 @@ export default async function DistrictOrPrayerPage({ params }: Props) {
             {siblings.length > 0 && (
               <div className="mt-6">
                 <h3 className="text-sm font-semibold text-text mb-3">
-                  {l === "ru" ? "Другие районы:" : l === "en" ? "Other districts:" : "Boshqa tumanlar:"}
+                  {l === "ru" ? "Другие районы:" : l === "en" ? "Other districts:" : l === "uz-cyrl" ? "Бошқа туманлар:" : "Boshqa tumanlar:"}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {siblings.slice(0, 15).map((d) => (

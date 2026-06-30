@@ -10,7 +10,7 @@ export function Footer({ locale }: { locale: Locale }) {
             <a href="https://prompter.uz" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
               Prompter MChJ
             </a>{" "}
-            {locale === "ru" ? "продукт" : locale === "en" ? "product" : "mahsuloti"}
+            {locale === "ru" ? "продукт" : locale === "en" ? "product" : locale === "uz-cyrl" ? "маҳсулоти" : "mahsuloti"}
           </p>
           <div className="flex gap-5">
             <a href={`/${locale}#prayer-times`} className="hover:text-primary transition-colors">{t(locale, "nav_prayer_times")}</a>
