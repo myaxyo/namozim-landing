@@ -7,6 +7,7 @@ import { PRAYERS } from "@/data/prayers";
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://namozim.uz";
   const locales = ["uz", "uz-cyrl", "ru", "en"];
+  const now = new Date();
 
   const homePages = locales.map((l) => ({
     url: `${base}/${l}`,
@@ -25,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const cityPages = locales.flatMap((l) =>
     CITIES.map((c) => ({
       url: `${base}/${l}/${c.slug}`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "daily" as const,
       priority: 0.8,
     }))
@@ -34,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const monthlyPages = locales.flatMap((l) =>
     CITIES.map((c) => ({
       url: `${base}/${l}/${c.slug}/oylik`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "daily" as const,
       priority: 0.7,
     }))
@@ -43,7 +44,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const districtPages = locales.flatMap((l) =>
     DISTRICTS.map((d) => ({
       url: `${base}/${l}/${d.citySlug}/${d.slug}`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "daily" as const,
       priority: 0.7,
     }))
@@ -52,7 +53,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const regionPages = locales.flatMap((l) =>
     REGIONS.map((r) => ({
       url: `${base}/${l}/viloyat/${r.slug}`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "daily" as const,
       priority: 0.85,
     }))
@@ -62,7 +63,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     CITIES.flatMap((c) =>
       PRAYERS.map((p) => ({
         url: `${base}/${l}/${c.slug}/${p.slug}`,
-        lastModified: new Date(),
+        lastModified: now,
         changeFrequency: "daily" as const,
         priority: 0.7,
       }))
@@ -70,7 +71,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   return [
-    { url: base, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
+    { url: base, lastModified: now, changeFrequency: "daily", priority: 1 },
     ...homePages,
     ...citiesPages,
     ...regionPages,

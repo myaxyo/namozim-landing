@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import { Locale, t } from "@/data/translations";
+import { hreflangAlternates } from "@/lib/seo";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CitiesSearch } from "@/components/CitiesSearch";
 
 interface Props {
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: descs[l],
     alternates: {
       canonical: `https://namozim.uz/${locale}/shaharlar`,
-      languages: { uz: "/uz/shaharlar", ru: "/ru/shaharlar", en: "/en/shaharlar" },
+      languages: hreflangAlternates("/shaharlar"),
     },
   };
 }
@@ -43,6 +45,12 @@ export default async function CitiesPage({ params }: Props) {
   return (
     <>
       <Header locale={l} />
+      <Breadcrumbs
+        items={[
+          { name: t(l, "home"), url: `/${locale}` },
+          { name: t(l, "nav_cities"), url: `/${locale}/shaharlar` },
+        ]}
+      />
       <main className="py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-10">

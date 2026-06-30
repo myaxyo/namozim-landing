@@ -4,9 +4,13 @@ import { CITIES, getCityBySlug, getCityName, getCityRegion } from "@/data/cities
 import { getDistrictsByCity, getDistrictName } from "@/data/districts";
 import { Locale, t } from "@/data/translations";
 import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
+import { hreflangAlternates } from "@/lib/seo";
+import { cityFaqItems } from "@/data/faq";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
 import { PrayerTimesImage } from "@/components/PrayerTimesImage";
 import { Header } from "@/components/Header";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Faq } from "@/components/Faq";
 import { Download } from "@/components/Download";
 import { Footer } from "@/components/Footer";
 
@@ -59,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     alternates: {
       canonical: `https://namozim.uz/${locale}/${slug}`,
-      languages: { uz: `/uz/${slug}`, ru: `/ru/${slug}`, en: `/en/${slug}` },
+      languages: hreflangAlternates(`/${slug}`),
     },
   };
 }
@@ -76,6 +80,13 @@ export default async function CityPage({ params }: Props) {
   return (
     <>
       <Header locale={l} />
+      <Breadcrumbs
+        items={[
+          { name: t(l, "home"), url: `/${locale}` },
+          { name: t(l, "nav_cities"), url: `/${locale}/shaharlar` },
+          { name, url: `/${locale}/${slug}` },
+        ]}
+      />
       <main>
         <CityPrayerTimes city={city} locale={l} />
 
@@ -130,6 +141,7 @@ export default async function CityPage({ params }: Props) {
             </div>
           </div>
         </section>
+        <Faq items={cityFaqItems(name, serverTimes, l)} heading={t(l, "faq_title")} />
         <Download locale={l} />
       </main>
       <Footer locale={l} />

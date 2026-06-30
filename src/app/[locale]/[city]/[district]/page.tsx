@@ -5,9 +5,13 @@ import { DISTRICTS, getDistrictBySlug, getDistrictName, getDistrictsByCity } fro
 import { PRAYERS, getPrayerBySlug } from "@/data/prayers";
 import { Locale, t } from "@/data/translations";
 import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
+import { hreflangAlternates } from "@/lib/seo";
+import { cityFaqItems } from "@/data/faq";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
 import { PrayerPage } from "@/components/PrayerPage";
 import { Header } from "@/components/Header";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Faq } from "@/components/Faq";
 import { Download } from "@/components/Download";
 import { Footer } from "@/components/Footer";
 
@@ -48,7 +52,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: `${pName} vaqti ${cityName} bugun 2026 — ${timeStr || "namoz vaqti"}`,
       description: `${cityName} ${pName} namozi vaqti bugun: ${timeStr}. Hanafiy mazhab. ${l === "uz" ? prayer.descUz : l === "ru" ? prayer.descRu : prayer.descEn}`,
-      alternates: { canonical: `https://namozim.uz/${locale}/${citySlug}/${dSlug}` },
+      alternates: {
+        canonical: `https://namozim.uz/${locale}/${citySlug}/${dSlug}`,
+        languages: hreflangAlternates(`/${citySlug}/${dSlug}`),
+      },
     };
   }
 
@@ -64,7 +71,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Namoz vaqtlari ${name} (${cityName}) bugun 2026`,
     description: `${name} namoz vaqtlari bugun. ${timesStr}. Hanafiy mazhab.`,
-    alternates: { canonical: `https://namozim.uz/${locale}/${citySlug}/${dSlug}` },
+    alternates: {
+      canonical: `https://namozim.uz/${locale}/${citySlug}/${dSlug}`,
+      languages: hreflangAlternates(`/${citySlug}/${dSlug}`),
+    },
   };
 }
 
@@ -77,11 +87,23 @@ export default async function DistrictOrPrayerPage({ params }: Props) {
   if (prayer) {
     const city = getCityBySlug(citySlug);
     if (!city) notFound();
+    const cityName = getCityName(city, l);
+    const pName = l === "ru" ? prayer.nameRu : l === "en" ? prayer.nameEn : prayer.nameUz;
+    const times = await fetchPrayerTimesServer(city.lat, city.lng);
     return (
       <>
         <Header locale={l} />
+        <Breadcrumbs
+          items={[
+            { name: t(l, "home"), url: `/${locale}` },
+            { name: t(l, "nav_cities"), url: `/${locale}/shaharlar` },
+            { name: cityName, url: `/${locale}/${citySlug}` },
+            { name: pName, url: `/${locale}/${citySlug}/${dSlug}` },
+          ]}
+        />
         <main>
           <PrayerPage city={city} prayer={prayer} locale={l} />
+          <Faq items={cityFaqItems(cityName, times, l)} heading={t(l, "faq_title")} />
           <Download locale={l} />
         </main>
         <Footer locale={l} />
@@ -105,10 +127,21 @@ export default async function DistrictOrPrayerPage({ params }: Props) {
   };
 
   const siblings = getDistrictsByCity(citySlug).filter((d) => d.slug !== dSlug);
+  const districtName = getDistrictName(district, l);
+  const cityName = getCityName(city, l);
+  const times = await fetchPrayerTimesServer(district.lat, district.lng);
 
   return (
     <>
       <Header locale={l} />
+      <Breadcrumbs
+        items={[
+          { name: t(l, "home"), url: `/${locale}` },
+          { name: t(l, "nav_cities"), url: `/${locale}/shaharlar` },
+          { name: cityName, url: `/${locale}/${citySlug}` },
+          { name: districtName, url: `/${locale}/${citySlug}/${dSlug}` },
+        ]}
+      />
       <main>
         <CityPrayerTimes city={districtAsCity} locale={l} />
         <section className="py-12">
@@ -133,6 +166,7 @@ export default async function DistrictOrPrayerPage({ params }: Props) {
             )}
           </div>
         </section>
+        <Faq items={cityFaqItems(districtName, times, l)} heading={t(l, "faq_title")} />
         <Download locale={l} />
       </main>
       <Footer locale={l} />

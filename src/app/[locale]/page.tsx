@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Locale, t } from "@/data/translations";
+import { hreflangAlternates } from "@/lib/seo";
 import { Header } from "@/components/Header";
 import { PrayerTimes } from "@/components/PrayerTimes";
 import { Cities } from "@/components/Cities";
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t(l, "seo_desc"),
     alternates: {
       canonical: `https://namozim.uz/${locale}`,
-      languages: { uz: "/uz", ru: "/ru", en: "/en" },
+      languages: hreflangAlternates(""),
     },
   };
 }

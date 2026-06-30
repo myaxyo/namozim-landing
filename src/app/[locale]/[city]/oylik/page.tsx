@@ -2,8 +2,10 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CITIES, getCityBySlug, getCityName } from "@/data/cities";
 import { Locale, t } from "@/data/translations";
+import { hreflangAlternates } from "@/lib/seo";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { MonthlyCalendar } from "@/components/MonthlyCalendar";
 
 interface Props {
@@ -35,11 +37,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     en: `Monthly Prayer Times ${name} | ${month}`,
   };
 
+  const descs: Record<Locale, string> = {
+    uz: `${name} uchun ${month} oyi namoz vaqtlari taqvimi: har kuni Bomdod, Peshin, Asr, Shom va Xufton vaqtlari. Hanafiy mazhab, Muslim World League usuli.`,
+    "uz-cyrl": `${name} учун ${month} ойи намоз вақтлари тақвими: ҳар куни Бомдод, Пешин, Аср, Шом ва Хуфтон вақтлари. Ҳанафий мазҳаб.`,
+    ru: `Календарь времени намаза ${name} на ${month}: ежедневное время Фаджр, Зухр, Аср, Магриб и Иша. Ханафитский мазхаб.`,
+    en: `${name} prayer times calendar for ${month}: daily Fajr, Dhuhr, Asr, Maghrib and Isha times. Hanafi school, Muslim World League method.`,
+  };
+
   return {
     title: titles[l],
-    description: titles[l],
+    description: descs[l],
     alternates: {
       canonical: `https://namozim.uz/${locale}/${slug}/oylik`,
+      languages: hreflangAlternates(`/${slug}/oylik`),
     },
   };
 }
@@ -49,10 +59,19 @@ export default async function MonthlyPage({ params }: Props) {
   const l = locale as Locale;
   const city = getCityBySlug(slug);
   if (!city) notFound();
+  const name = getCityName(city, l);
 
   return (
     <>
       <Header locale={l} />
+      <Breadcrumbs
+        items={[
+          { name: t(l, "home"), url: `/${locale}` },
+          { name: t(l, "nav_cities"), url: `/${locale}/shaharlar` },
+          { name, url: `/${locale}/${slug}` },
+          { name: t(l, "monthly"), url: `/${locale}/${slug}/oylik` },
+        ]}
+      />
       <main className="py-16 md:py-24">
         <MonthlyCalendar city={city} locale={l} />
       </main>

@@ -5,8 +5,10 @@ import { CITIES, getCityName } from "@/data/cities";
 import { getDistrictsByCity, getDistrictName } from "@/data/districts";
 import { Locale, t } from "@/data/translations";
 import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
+import { hreflangAlternates } from "@/lib/seo";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
 import { Header } from "@/components/Header";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Download } from "@/components/Download";
 import { Footer } from "@/components/Footer";
 
@@ -44,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab.`,
     alternates: {
       canonical: `https://namozim.uz/${locale}/viloyat/${slug}`,
-      languages: { uz: `/uz/viloyat/${slug}`, ru: `/ru/viloyat/${slug}`, en: `/en/viloyat/${slug}` },
+      languages: hreflangAlternates(`/viloyat/${slug}`),
     },
   };
 }
@@ -68,6 +70,13 @@ export default async function RegionPage({ params }: Props) {
   return (
     <>
       <Header locale={l} />
+      <Breadcrumbs
+        items={[
+          { name: t(l, "home"), url: `/${locale}` },
+          { name: t(l, "nav_cities"), url: `/${locale}/shaharlar` },
+          { name, url: `/${locale}/viloyat/${slug}` },
+        ]}
+      />
       <main>
         {mainCity && <CityPrayerTimes city={mainCity} locale={l} />}
         <section className="py-12">
