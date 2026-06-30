@@ -5,6 +5,7 @@ import { Locale, t } from "@/data/translations";
 
 const SEARCH_PLACEHOLDER: Record<Locale, string> = {
   uz: "Shahar nomini yozing...",
+  "uz-cyrl": "Шаҳар номини ёзинг...",
   ru: "Введите название города...",
   en: "Search city...",
 };

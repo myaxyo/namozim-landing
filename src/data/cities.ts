@@ -1,12 +1,14 @@
 export interface City {
   slug: string;
   name: string;
+  nameCyrl?: string;
   nameRu: string;
   nameEn: string;
   lat: number;
   lng: number;
   region: string;
   regionRu: string;
+  regionCyrl?: string;
 }
 
 export const CITIES: City[] = [
@@ -83,12 +85,14 @@ export function getCityBySlug(slug: string): City | undefined {
 }
 
 export function getCityName(city: City, locale: string): string {
+  if (locale === "uz-cyrl") return city.nameCyrl || city.nameRu;
   if (locale === "ru") return city.nameRu;
   if (locale === "en") return city.nameEn;
   return city.name;
 }
 
 export function getCityRegion(city: City, locale: string): string {
+  if (locale === "uz-cyrl") return city.regionCyrl || city.regionRu;
   if (locale === "ru") return city.regionRu;
   return city.region;
 }

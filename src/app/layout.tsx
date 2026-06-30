@@ -77,7 +77,7 @@ export default function RootLayout({
               alternateName: ["Namozim.uz", "Намозим"],
               url: "https://namozim.uz",
               description: "O'zbekiston bo'ylab aniq namoz vaqtlari",
-              inLanguage: ["uz", "ru", "en"],
+              inLanguage: ["uz", "uz-cyrl", "ru", "en"],
               publisher: {
                 "@type": "Organization",
                 name: "Prompter MChJ",

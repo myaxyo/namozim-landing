@@ -6,7 +6,7 @@ import { PRAYERS } from "@/data/prayers";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://namozim.uz";
-  const locales = ["uz", "ru", "en"];
+  const locales = ["uz", "uz-cyrl", "ru", "en"];
 
   const homePages = locales.map((l) => ({
     url: `${base}/${l}`,

@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { Locale } from "@/data/translations";
 
-const LOCALES: Locale[] = ["uz", "ru", "en"];
-const LANG_MAP: Record<Locale, string> = { uz: "uz", ru: "ru", en: "en" };
+const LOCALES: Locale[] = ["uz", "uz-cyrl", "ru", "en"];
+const LANG_MAP: Record<Locale, string> = { uz: "uz", "uz-cyrl": "uz", ru: "ru", en: "en" };
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));

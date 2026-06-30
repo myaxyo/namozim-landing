@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  return [{ locale: "uz" }, { locale: "ru" }, { locale: "en" }];
+  return [{ locale: "uz" }, { locale: "uz-cyrl" }, { locale: "ru" }, { locale: "en" }];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -17,11 +17,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const l = locale as Locale;
   const titles: Record<Locale, string> = {
     uz: "Namoz vaqtlari — O'zbekiston shaharlari ro'yxati",
+    "uz-cyrl": "Намоз вақтлари — Ўзбекистон шаҳарлари рўйхати",
     ru: "Время намаза — Список городов Узбекистана",
     en: "Prayer Times — Cities of Uzbekistan",
   };
   const descs: Record<Locale, string> = {
     uz: "O'zbekistonning barcha shaharlari uchun namoz vaqtlarini toping. 50+ shahar. Hanafiy mazhab.",
+    "uz-cyrl": "Ўзбекистоннинг барча шаҳарлари учун намоз вақтларини топинг. 50+ шаҳар. Ҳанафий мазҳаб.",
     ru: "Найдите время намаза для всех городов Узбекистана. 50+ городов. Ханафитский мазхаб.",
     en: "Find prayer times for all cities in Uzbekistan. 50+ cities. Hanafi school.",
   };

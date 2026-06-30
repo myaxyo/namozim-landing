@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  const locales = ["uz", "ru", "en"];
+  const locales = ["uz", "uz-cyrl", "ru", "en"];
   // District pages
   const districtParams = locales.flatMap((locale) =>
     DISTRICTS.map((d) => ({ locale, city: d.citySlug, district: d.slug }))

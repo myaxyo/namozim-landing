@@ -15,7 +15,7 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  const locales = ["uz", "ru", "en"];
+  const locales = ["uz", "uz-cyrl", "ru", "en"];
   return locales.flatMap((locale) =>
     REGIONS.map((r) => ({ locale, region: r.slug }))
   );
@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const titles: Record<Locale, string> = {
     uz: `Namoz vaqtlari ${name} bugun 2026`,
+    "uz-cyrl": `Намоз вақтлари ${name} бугун 2026`,
     ru: `Время намаза ${name} сегодня 2026`,
     en: `Prayer Times ${name} Today 2026`,
   };

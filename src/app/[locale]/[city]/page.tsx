@@ -15,7 +15,7 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  const locales = ["uz", "ru", "en"];
+  const locales = ["uz", "uz-cyrl", "ru", "en"];
   return locales.flatMap((locale) =>
     CITIES.map((c) => ({ locale, city: c.slug }))
   );
@@ -36,12 +36,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const titles: Record<Locale, string> = {
     uz: `Namoz vaqtlari ${name} bugun 2026 | Bugun namoz vaqti`,
+    "uz-cyrl": `Намоз вақтлари ${name} бугун 2026 | Бугун намоз вақти`,
     ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 ${name} \u0441\u0435\u0433\u043E\u0434\u043D\u044F 2026`,
     en: `Prayer Times ${name} Today 2026 | Fajr, Dhuhr, Asr, Maghrib, Isha`,
   };
 
   const descs: Record<Locale, string> = {
     uz: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab. Bomdod, Peshin, Asr, Shom, Xufton.`,
+    "uz-cyrl": `${name} намоз вақтлари бугун: ${timesStr}. Ҳанафий мазҳаб. Бомдод, Пешин, Аср, Шом, Хуфтон.`,
     ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 \u0432 ${name} \u0441\u0435\u0433\u043E\u0434\u043D\u044F: ${timesStr}. \u0425\u0430\u043D\u0430\u0444\u0438\u0442\u0441\u043A\u0438\u0439 \u043C\u0430\u0437\u0445\u0430\u0431.`,
     en: `Prayer times in ${name} today: ${timesStr}. Hanafi school.`,
   };
