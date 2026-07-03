@@ -50,7 +50,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const timeStr = times ? (times as unknown as Record<string, string>)[prayerKey] || "" : "";
 
     return {
-      title: `${pName} vaqti ${cityName} bugun 2026 — ${timeStr || "namoz vaqti"}`,
+      title: times
+        ? `${pName} ${cityName} bugun — ${timeStr} ✓ 2026`
+        : `${pName} vaqti ${cityName} bugun 2026 — namoz vaqti`,
       description: `${cityName} ${pName} namozi vaqti bugun: ${timeStr}. Hanafiy mazhab. ${l === "uz" ? prayer.descUz : l === "ru" ? prayer.descRu : prayer.descEn}`,
       alternates: {
         canonical: `https://namozim.uz/${locale}/${citySlug}/${dSlug}`,
@@ -69,8 +71,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const timesStr = times ? `Bomdod: ${times.fajr} | Peshin: ${times.dhuhr} | Asr: ${times.asr} | Shom: ${times.maghrib} | Xufton: ${times.isha}` : "";
 
   return {
-    title: `Namoz vaqtlari ${name} (${cityName}) bugun 2026`,
-    description: `${name} namoz vaqtlari bugun. ${timesStr}. Hanafiy mazhab.`,
+    title: times
+      ? `${name} namoz vaqtlari bugun ✓ Bomdod ${times.fajr} | Shom ${times.maghrib}`
+      : `Namoz vaqtlari ${name} (${cityName}) bugun 2026`,
+    description: `${name} namoz vaqtlari bugun. ${timesStr}. Hanafiy mazhab, MWL usuli.`,
     alternates: {
       canonical: `https://namozim.uz/${locale}/${citySlug}/${dSlug}`,
       languages: hreflangAlternates(`/${citySlug}/${dSlug}`),

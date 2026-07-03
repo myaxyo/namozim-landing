@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import { Locale, t } from "@/data/translations";
-import { hreflangAlternates } from "@/lib/seo";
+import { CITIES, getCityName } from "@/data/cities";
+import { hreflangAlternates, SITE_URL } from "@/lib/seo";
 import { Header } from "@/components/Header";
+import { JsonLd } from "@/components/JsonLd";
 import { PrayerTimes } from "@/components/PrayerTimes";
 import { Cities } from "@/components/Cities";
 import { About } from "@/components/About";
@@ -28,6 +30,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LocaleHome({ params }: Props) {
   const { locale } = await params;
   const l = locale as Locale;
+
+  // Top cities ItemList — signals page hierarchy to Google for sitelinks
+  const topCities = CITIES.slice(0, 20);
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: t(l, "nav_cities"),
+    numberOfItems: topCities.length,
+    itemListElement: topCities.map((city, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: getCityName(city, l),
+      url: `${SITE_URL}/${locale}/${city.slug}`,
+    })),
+  };
+
   return (
     <>
       <Header locale={l} />
@@ -36,6 +54,7 @@ export default async function LocaleHome({ params }: Props) {
         <Cities locale={l} />
         <About locale={l} />
         <Download locale={l} />
+        <JsonLd data={itemListJsonLd} />
       </main>
       <Footer locale={l} />
     </>

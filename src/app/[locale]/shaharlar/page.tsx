@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import { Locale, t } from "@/data/translations";
-import { hreflangAlternates } from "@/lib/seo";
+import { CITIES, getCityName } from "@/data/cities";
+import { hreflangAlternates, SITE_URL } from "@/lib/seo";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { JsonLd } from "@/components/JsonLd";
 import { CitiesSearch } from "@/components/CitiesSearch";
 
 interface Props {
@@ -42,6 +44,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CitiesPage({ params }: Props) {
   const { locale } = await params;
   const l = locale as Locale;
+
+  // ItemList tells Google all city pages belong to one authoritative collection
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: t(l, "cities_title"),
+    numberOfItems: CITIES.length,
+    itemListElement: CITIES.map((city, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: getCityName(city, l),
+      url: `${SITE_URL}/${locale}/${city.slug}`,
+    })),
+  };
+
   return (
     <>
       <Header locale={l} />
@@ -61,6 +78,7 @@ export default async function CitiesPage({ params }: Props) {
           </div>
           <CitiesSearch locale={l} />
         </div>
+        <JsonLd data={itemListJsonLd} />
       </main>
       <Footer locale={l} />
     </>

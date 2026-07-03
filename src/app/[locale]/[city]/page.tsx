@@ -32,24 +32,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!city) return {};
   const name = getCityName(city, l);
 
-  // Fetch actual prayer times for meta description
+  // Fetch actual prayer times for dynamic meta title + description
   const times = await fetchPrayerTimesServer(city.lat, city.lng);
   const timesStr = times
     ? `Bomdod: ${times.fajr} | Peshin: ${times.dhuhr} | Asr: ${times.asr} | Shom: ${times.maghrib} | Xufton: ${times.isha}`
     : "";
 
   const titles: Record<Locale, string> = {
-    uz: `Namoz vaqtlari ${name} bugun 2026 | Bugun namoz vaqti`,
-    "uz-cyrl": `Намоз вақтлари ${name} бугун 2026 | Бугун намоз вақти`,
-    ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 ${name} \u0441\u0435\u0433\u043E\u0434\u043D\u044F 2026`,
-    en: `Prayer Times ${name} Today 2026 | Fajr, Dhuhr, Asr, Maghrib, Isha`,
+    uz: times
+      ? `${name} namoz vaqtlari bugun ✓ Bomdod ${times.fajr} | Shom ${times.maghrib}`
+      : `${name} namoz vaqtlari bugun 2026 — aniq vaqtlar`,
+    "uz-cyrl": times
+      ? `${name} намоз вақтлари бугун ✓ Бомдод ${times.fajr} | Шом ${times.maghrib}`
+      : `${name} намоз вақтлари бугун 2026 — аниқ вақтлар`,
+    ru: times
+      ? `Намаз ${name} сегодня ✓ Фаджр ${times.fajr} | Магриб ${times.maghrib}`
+      : `Время намаза ${name} сегодня 2026`,
+    en: times
+      ? `${name} Prayer Times Today ✓ Fajr ${times.fajr} | Maghrib ${times.maghrib}`
+      : `${name} Prayer Times Today 2026`,
   };
 
   const descs: Record<Locale, string> = {
-    uz: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab. Bomdod, Peshin, Asr, Shom, Xufton.`,
-    "uz-cyrl": `${name} намоз вақтлари бугун: ${timesStr}. Ҳанафий мазҳаб. Бомдод, Пешин, Аср, Шом, Хуфтон.`,
-    ru: `\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u043C\u0430\u0437\u0430 \u0432 ${name} \u0441\u0435\u0433\u043E\u0434\u043D\u044F: ${timesStr}. \u0425\u0430\u043D\u0430\u0444\u0438\u0442\u0441\u043A\u0438\u0439 \u043C\u0430\u0437\u0445\u0430\u0431.`,
-    en: `Prayer times in ${name} today: ${timesStr}. Hanafi school.`,
+    uz: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab, MWL usuli. Oylik taqvim, tuman vaqtlari.`,
+    "uz-cyrl": `${name} намоз вақтлари бугун: ${timesStr}. Ҳанафий мазҳаб, MWL усули. Ойлик тақвим.`,
+    ru: `Время намаза в ${name} сегодня: ${timesStr}. Ханафитский мазхаб, MWL. Месячный календарь.`,
+    en: `Prayer times in ${name} today: ${timesStr}. Hanafi school, MWL method. Monthly calendar.`,
   };
 
   return {
