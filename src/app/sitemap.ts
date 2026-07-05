@@ -3,6 +3,7 @@ import { CITIES } from "@/data/cities";
 import { DISTRICTS } from "@/data/districts";
 import { REGIONS } from "@/data/regions";
 import { PRAYERS } from "@/data/prayers";
+import { INTERNATIONAL_CITIES } from "@/data/internationalCities";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://namozim.uz";
@@ -70,12 +71,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
     )
   );
 
+  // International cities
+  const internationalIndexPages = locales.map((l) => ({
+    url: `${base}/${l}/dunyo`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
+  }));
+
+  const internationalCityPages = locales.flatMap((l) =>
+    INTERNATIONAL_CITIES.map((c) => ({
+      url: `${base}/${l}/dunyo/${c.slug}`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    }))
+  );
+
   return [
     { url: base, lastModified: now, changeFrequency: "daily", priority: 1 },
     ...homePages,
     ...citiesPages,
+    ...internationalIndexPages,
     ...regionPages,
     ...cityPages,
+    ...internationalCityPages,
     ...monthlyPages,
     ...prayerPages,
     ...districtPages,

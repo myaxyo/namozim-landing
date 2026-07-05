@@ -20,14 +20,25 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Namoz Vaqtlari 2026 — O'zbekiston | Bomdod, Peshin, Asr, Shom, Xufton",
+  title: "Namoz Vaqtlari 2026 — Aniq Namoz Vaqti | Bomdod, Peshin, Asr, Shom, Xufton",
   description:
-    "O'zbekiston bo'ylab bugungi aniq namoz vaqtlari. Toshkent, Samarqand, Buxoro, Namangan, Andijon va boshqa shaharlar. Hanafiy mazhab, Muslim World League usuli. Bepul onlayn xizmat.",
+    "Dunyo bo'ylab bugungi aniq namoz vaqtlari. O'zbekiston, Rossiya, Turkiya, BAA, Koreya va boshqa mamlakatlar. Hanafiy mazhab, Muslim World League usuli. Bepul onlayn xizmat.",
   keywords: [
     "namoz vaqtlari",
     "namoz vaqti",
     "namoz vaqtlari bugun",
     "namoz vaqtlari toshkent",
+    "namoz vaqtlari moskva",
+    "namoz vaqtlari istanbul",
+    "namoz vaqtlari dubay",
+    "prayer times",
+    "prayer times today",
+    "prayer times moscow",
+    "prayer times istanbul",
+    "prayer times dubai",
+    "время намаза",
+    "время намаза москва",
+    "время намаза сегодня",
     "bomdod vaqti",
     "peshin vaqti",
     "asr vaqti",
@@ -36,13 +47,12 @@ export const metadata: Metadata = {
     "prayer times uzbekistan",
     "prayer times tashkent",
     "namoz",
-    "O'zbekiston",
     "tasbih",
     "zikr",
   ],
   openGraph: {
-    title: "Namoz Vaqtlari — O'zbekiston bo'ylab aniq namoz vaqtlari",
-    description: "Bugungi namoz vaqtlari: Bomdod, Peshin, Asr, Shom, Xufton. Hanafiy mazhab.",
+    title: "Namoz Vaqtlari — Dunyo bo'ylab aniq namoz vaqtlari",
+    description: "Bugungi namoz vaqtlari: Bomdod, Peshin, Asr, Shom, Xufton. Hanafiy mazhab. O'zbekiston va dunyo shaharlari.",
     url: "https://namozim.uz",
     siteName: "Namozim",
     locale: "uz_UZ",
@@ -51,9 +61,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Namoz Vaqtlari — O'zbekiston | Namozim",
+    title: "Namoz Vaqtlari — Dunyo bo'ylab | Namozim",
     description:
-      "O'zbekiston bo'ylab bugungi aniq namoz vaqtlari. Hanafiy mazhab, Muslim World League usuli.",
+      "Dunyo bo'ylab bugungi aniq namoz vaqtlari. Hanafiy mazhab, Muslim World League usuli.",
   },
   alternates: {
     canonical: "https://namozim.uz",
