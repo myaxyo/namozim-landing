@@ -33,9 +33,14 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
   const [city, setCity] = useState("");
   const [countdown, setCountdown] = useState("");
   const [nextPrayer, setNextPrayer] = useState("fajr");
-  const [date] = useState(() => formatDate(new Date(), locale));
+  const [date, setDate] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
+
+  // Set date on client only to avoid hydration mismatch
+  useEffect(() => {
+    setDate(formatDate(new Date(), locale));
+  }, [locale]);
 
   const fetchTimes = useCallback(async (lat: number, lng: number) => {
     try {
