@@ -27,15 +27,33 @@ export function CitiesSearch({ locale }: { locale: Locale }) {
     );
   }, [query]);
 
-  // Group by region
-  const grouped = useMemo(() => {
-    const map = new Map<string, typeof CITIES>();
-    for (const city of filtered) {
-      const region = getCityRegion(city, locale);
-      if (!map.has(region)) map.set(region, []);
-      map.get(region)!.push(city);
+  // Group by country, then by region
+  const groupedByCountry = useMemo(() => {
+    const countries: { code: string; label: string; regions: [string, typeof CITIES][] }[] = [];
+    const countryLabels: Record<string, Record<Locale, string>> = {
+      uz: { uz: "O'zbekiston", "uz-cyrl": "Ўзбекистон", ru: "Узбекистан", en: "Uzbekistan", tg: "Ӯзбекистон", ky: "Өзбекстан" },
+      tj: { uz: "Tojikiston", "uz-cyrl": "Тожикистон", ru: "Таджикистан", en: "Tajikistan", tg: "Тоҷикистон", ky: "Тажикстан" },
+      kg: { uz: "Qirg'iziston", "uz-cyrl": "Қирғизистон", ru: "Кыргызстан", en: "Kyrgyzstan", tg: "Қирғизистон", ky: "Кыргызстан" },
+    };
+
+    for (const countryCode of ["uz", "tj", "kg"] as const) {
+      const countryCities = filtered.filter((c) => (c.country || "uz") === countryCode);
+      if (countryCities.length === 0) continue;
+
+      const regionMap = new Map<string, typeof CITIES>();
+      for (const city of countryCities) {
+        const region = getCityRegion(city, locale);
+        if (!regionMap.has(region)) regionMap.set(region, []);
+        regionMap.get(region)!.push(city);
+      }
+
+      countries.push({
+        code: countryCode,
+        label: countryLabels[countryCode][locale],
+        regions: Array.from(regionMap.entries()),
+      });
     }
-    return Array.from(map.entries());
+    return countries;
   }, [filtered, locale]);
 
   return (
@@ -64,35 +82,52 @@ export function CitiesSearch({ locale }: { locale: Locale }) {
         {filtered.length} {locale === "ru" ? "городов" : locale === "en" ? "cities" : locale === "uz-cyrl" ? "шаҳар" : "shahar"}
       </p>
 
-      {/* Grouped city list */}
-      {grouped.length === 0 ? (
+      {/* Grouped city list by country */}
+      {groupedByCountry.length === 0 ? (
         <div className="text-center py-12 text-text-muted">
-          {locale === "ru" ? "Ничего не найдено" : locale === "en" ? "No results found" : locale === "uz-cyrl" ? "Ҳеч нарса топилмади" : "Hech narsa topilmadi"}
+          {locale === "ru" ? "Ничего не найдено" : locale === "en" ? "No results found" : locale === "tg" ? "Чизе ёфт нашуд" : locale === "ky" ? "Эч нерсе табылган жок" : locale === "uz-cyrl" ? "Ҳеч нарса топилмади" : "Hech narsa topilmadi"}
         </div>
       ) : (
-        <div className="space-y-8">
-          {grouped.map(([region, cities]) => (
-            <div key={region}>
-              <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3 px-1">{region}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                {cities.map((city) => (
-                  <a
-                    key={city.slug}
-                    href={`/${locale}/${city.slug}`}
-                    className="flex items-center gap-3 bg-surface border border-border rounded-xl px-4 py-3 hover:border-primary hover:shadow-sm transition-all group"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-primary-soft flex items-center justify-center flex-shrink-0">
-                      <span className="text-primary text-xs font-bold">{getCityName(city, locale)[0]}</span>
+        <div className="space-y-12">
+          {groupedByCountry.map(({ code, label, regions }) => (
+            <div key={code}>
+              {/* Country header */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-hero-from to-hero-to flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-sm font-bold">{code.toUpperCase()}</span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-text font-[family-name:var(--font-display)]">{label}</h2>
+                  <p className="text-xs text-text-muted">{regions.reduce((sum, [, c]) => sum + c.length, 0)} {locale === "ru" ? "городов" : locale === "en" ? "cities" : locale === "tg" ? "шаҳр" : locale === "ky" ? "шаар" : "shahar"}</p>
+                </div>
+              </div>
+              {/* Regions within country */}
+              <div className="space-y-8">
+                {regions.map(([region, cities]) => (
+                  <div key={region}>
+                    <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3 px-1">{region}</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                      {cities.map((city) => (
+                        <a
+                          key={city.slug}
+                          href={`/${locale}/${city.slug}`}
+                          className="flex items-center gap-3 bg-surface border border-border rounded-xl px-4 py-3 hover:border-primary hover:shadow-sm transition-all group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-primary-soft flex items-center justify-center flex-shrink-0">
+                            <span className="text-primary text-xs font-bold">{getCityName(city, locale)[0]}</span>
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-text group-hover:text-primary transition-colors truncate">
+                              {getCityName(city, locale)}
+                            </p>
+                          </div>
+                          <svg className="ml-auto text-text-muted group-hover:text-primary transition-colors flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="m9 18 6-6-6-6"/>
+                          </svg>
+                        </a>
+                      ))}
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-text group-hover:text-primary transition-colors truncate">
-                        {getCityName(city, locale)}
-                      </p>
-                    </div>
-                    <svg className="ml-auto text-text-muted group-hover:text-primary transition-colors flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                  </a>
+                  </div>
                 ))}
               </div>
             </div>

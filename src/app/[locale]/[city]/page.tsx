@@ -52,11 +52,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? `${name} Prayer Times Today ✓ Fajr ${times.fajr} | Maghrib ${times.maghrib}`
       : `${name} Prayer Times Today 2026`,
     tg: times
-      ? `${name} вақти намоз имрӯз ✓ Бомдод ${times.fajr} | Шом ${times.maghrib}`
-      : `${name} вақти намоз имрӯз 2026`,
+      ? `Вақти намоз ${name} имрӯз ✓ Бомдод ${times.fajr} | Шом ${times.maghrib}`
+      : `Вақти намоз ${name} имрӯз 2026`,
     ky: times
-      ? `${name} намаз убактысы бүгүн ✓ Багымдат ${times.fajr} | Шам ${times.maghrib}`
-      : `${name} намаз убактысы бүгүн 2026`,
+      ? `Намаз убактысы ${name} бүгүн ✓ Багымдат ${times.fajr} | Шам ${times.maghrib}`
+      : `Намаз убактысы ${name} бүгүн 2026`,
   };
 
   const descs: Record<Locale, string> = {
@@ -115,11 +115,17 @@ export default async function CityPage({ params }: Props) {
               <p>{name} ({region}) {t(l, "city_about_p1")}</p>
               <p>{t(l, "city_about_p2")}</p>
               <p>{t(l, "city_about_p3")}</p>
+              {(city.country === "tj") && (
+                <p>{l === "tg" ? `${name} — яке аз шаҳрҳои Тоҷикистон аст. Вақти намоз дар ин ҷо мувофиқи мазҳаби Ҳанафӣ ва координатаҳои дақиқи ҷуғрофӣ ҳисоб карда мешавад. Барои огоҳномаи намоз барномаи Намозимро насб кунед.` : l === "ru" ? `${name} — город в Таджикистане. Время намаза рассчитывается по ханафитскому мазхабу на основе точных географических координат. Установите приложение Намозим для уведомлений.` : `${name} — Tojikistondagi shahar. Namoz vaqtlari Hanafiy mazhab va aniq geografik koordinatalar asosida hisoblanadi.`}</p>
+              )}
+              {(city.country === "kg") && (
+                <p>{l === "ky" ? `${name} — Кыргызстандагы шаар. Намаз убактысы Ханафий мазхабы боюнча так географиялык координаттардын негизинде эсептелет. Эскертмелер үчүн Намозим тиркемесин орнотуңуз.` : l === "ru" ? `${name} — город в Кыргызстане. Время намаза рассчитывается по ханафитскому мазхабу на основе точных географических координат. Установите приложение Намозим для уведомлений.` : `${name} — Qirg'izistondagi shahar. Namoz vaqtlari Hanafiy mazhab va aniq geografik koordinatalar asosida hisoblanadi.`}</p>
+              )}
             </article>
             <div className="mt-10">
               <h3 className="text-sm font-semibold text-text mb-3">{t(l, "other_cities")}</h3>
               <div className="flex flex-wrap gap-2">
-                {CITIES.filter((c) => c.slug !== slug).slice(0, 12).map((c) => (
+                {CITIES.filter((c) => c.slug !== slug && (c.country || "uz") === (city.country || "uz")).slice(0, 12).map((c) => (
                   <a key={c.slug} href={`/${locale}/${c.slug}`}
                     className="bg-surface-muted border border-border px-3 py-1.5 rounded-full text-xs text-text-secondary hover:text-primary hover:border-primary transition-colors">
                     {getCityName(c, l)}
