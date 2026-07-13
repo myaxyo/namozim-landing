@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/JsonLd";
+import { TelemetryDeck } from "@/components/TelemetryDeckProvider";
 import { hreflangAlternates, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
@@ -149,7 +150,9 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        {children}
+        <TelemetryDeck>
+          {children}
+        </TelemetryDeck>
         <Analytics />
       </body>
     </html>

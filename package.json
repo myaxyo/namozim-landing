@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@typedigital/telemetrydeck-react": "^0.5.0",
     "@vercel/analytics": "^2.0.1",
     "html-to-image": "^1.11.13",
     "next": "16.2.9",
