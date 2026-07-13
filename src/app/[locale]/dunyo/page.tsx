@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  return [{ locale: "uz" }, { locale: "uz-cyrl" }, { locale: "ru" }, { locale: "en" }];
+  return [{ locale: "uz" }, { locale: "uz-cyrl" }, { locale: "ru" }, { locale: "en" }, { locale: "tg" }, { locale: "ky" }];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -28,6 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "uz-cyrl": "Намоз вақтлари дунё бўйлаб — хориждаги шаҳарлар",
     ru: "Время намаза по всему миру — города за рубежом",
     en: "Prayer Times Worldwide — International Cities",
+    tg: "Вақти намоз дар саросари ҷаҳон — шаҳрҳои хориҷӣ",
+    ky: "Намаз убактысы дүйнө боюнча — эл аралык шаарлар",
   };
 
   const descs: Record<Locale, string> = {
@@ -35,6 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "uz-cyrl": "Москва, Истанбул, Дубай, Сеул, Олмаота ва бошқа хорижий шаҳарлар учун намоз вақтлари.",
     ru: "Время намаза в Москве, Стамбуле, Дубае, Сеуле, Алматы и других городах мира. Ханафитский мазхаб.",
     en: "Prayer times in Moscow, Istanbul, Dubai, Seoul, Almaty and other cities worldwide. Hanafi school.",
+    tg: "Вақти намоз дар Маскав, Истанбул, Дубай, Сеул, Алмаато ва дигар шаҳрҳои ҷаҳон. Мазҳаби Ҳанафӣ.",
+    ky: "Москва, Стамбул, Дубай, Сеул, Алматы жана дүйнөнүн башка шаарларында намаз убактысы. Ханафий мазхаб.",
   };
 
   return {

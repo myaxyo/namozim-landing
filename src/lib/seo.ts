@@ -13,6 +13,8 @@ export function hreflangAlternates(suffix = ""): Record<string, string> {
     "uz-Cyrl": `${SITE_URL}/uz-cyrl${s}`,
     ru: `${SITE_URL}/ru${s}`,
     en: `${SITE_URL}/en${s}`,
+    tg: `${SITE_URL}/tg${s}`,
+    ky: `${SITE_URL}/ky${s}`,
     "x-default": `${SITE_URL}/uz${s}`,
   };
 }

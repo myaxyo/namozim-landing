@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  const locales = ["uz", "uz-cyrl", "ru", "en"];
+  const locales = ["uz", "uz-cyrl", "ru", "en", "tg", "ky"];
   return locales.flatMap((locale) =>
     INTERNATIONAL_CITIES.map((c) => ({ locale, city: c.slug }))
   );
@@ -51,6 +51,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     en: times
       ? `${name} Prayer Times Today ✓ Fajr ${times.fajr} | Maghrib ${times.maghrib}`
       : `${name} Prayer Times Today 2026 — ${country}`,
+    tg: times
+      ? `${name} вақти намоз имрӯз ✓ Бомдод ${times.fajr} | Шом ${times.maghrib}`
+      : `${name} вақти намоз имрӯз 2026 — ${country}`,
+    ky: times
+      ? `${name} намаз убактысы бүгүн ✓ Багымдат ${times.fajr} | Шам ${times.maghrib}`
+      : `${name} намаз убактысы бүгүн 2026 — ${country}`,
   };
 
   const timesStr = times
@@ -62,6 +68,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "uz-cyrl": `${name} (${country}) намоз вақтлари бугун: ${timesStr}. Ҳанафий мазҳаб, MWL усули.`,
     ru: `Время намаза в городе ${name} (${country}) сегодня: ${timesStr}. Ханафитский мазхаб, метод MWL.`,
     en: `Prayer times in ${name}, ${country} today: ${timesStr}. Hanafi school, MWL method.`,
+    tg: `Вақти намоз дар ${name} (${country}) имрӯз: ${timesStr}. Мазҳаби Ҳанафӣ, усули MWL.`,
+    ky: `${name} (${country}) намаз убактысы бүгүн: ${timesStr}. Ханафий мазхаб, MWL ыкмасы.`,
   };
 
   return {

@@ -66,7 +66,6 @@ export const metadata: Metadata = {
       "Dunyo bo'ylab bugungi aniq namoz vaqtlari. Hanafiy mazhab, Muslim World League usuli.",
   },
   alternates: {
-    canonical: "https://namozim.uz",
     languages: hreflangAlternates(""),
   },
   robots: {
@@ -100,7 +99,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="uz" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="uz" suppressHydrationWarning className={`${cormorant.variable} ${inter.variable}`}>
       <head>
         <JsonLd
           data={{

@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  const locales = ["uz", "uz-cyrl", "ru", "en"];
+  const locales = ["uz", "uz-cyrl", "ru", "en", "tg", "ky"];
   return locales.flatMap((locale) =>
     CITIES.map((c) => ({ locale, city: c.slug }))
   );
@@ -35,6 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "uz-cyrl": `Ойлик намоз вақтлари ${name} | ${month}`,
     ru: `Месячный календарь намаза ${name} | ${month}`,
     en: `Monthly Prayer Times ${name} | ${month}`,
+    tg: `Тақвими моҳонаи намоз ${name} | ${month}`,
+    ky: `Айлык намаз убактысы ${name} | ${month}`,
   };
 
   const descs: Record<Locale, string> = {
@@ -42,6 +44,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "uz-cyrl": `${name} учун ${month} ойи намоз вақтлари тақвими: ҳар куни Бомдод, Пешин, Аср, Шом ва Хуфтон вақтлари. Ҳанафий мазҳаб.`,
     ru: `Календарь времени намаза ${name} на ${month}: ежедневное время Фаджр, Зухр, Аср, Магриб и Иша. Ханафитский мазхаб.`,
     en: `${name} prayer times calendar for ${month}: daily Fajr, Dhuhr, Asr, Maghrib and Isha times. Hanafi school, Muslim World League method.`,
+    tg: `Тақвими вақти намоз ${name} барои ${month}: ҳаррӯза Бомдод, Пешин, Аср, Шом ва Хуфтон. Мазҳаби Ҳанафӣ.`,
+    ky: `${name} намаз убактысы ${month} календары: күн сайын Багымдат, Бешим, Аср, Шам жана Куптан. Ханафий мазхаб.`,
   };
 
   return {

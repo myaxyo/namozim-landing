@@ -8,6 +8,8 @@ const SEARCH_PLACEHOLDER: Record<Locale, string> = {
   "uz-cyrl": "Шаҳар номини ёзинг...",
   ru: "Введите название города...",
   en: "Search city...",
+  tg: "Номи шаҳрро нависед...",
+  ky: "Шаар атын жазыңыз...",
 };
 
 export function CitiesSearch({ locale }: { locale: Locale }) {

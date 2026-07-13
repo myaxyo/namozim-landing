@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function generateStaticParams() {
-  return [{ locale: "uz" }, { locale: "uz-cyrl" }, { locale: "ru" }, { locale: "en" }];
+  return [{ locale: "uz" }, { locale: "uz-cyrl" }, { locale: "ru" }, { locale: "en" }, { locale: "tg" }, { locale: "ky" }];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -25,12 +25,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "uz-cyrl": "Намоз вақтлари — Ўзбекистон ва дунё шаҳарлари",
     ru: "Время намаза — города Узбекистана и мира",
     en: "Prayer Times — Uzbekistan & Worldwide Cities",
+    tg: "Вақти намоз — шаҳрҳои Тоҷикистон ва ҷаҳон",
+    ky: "Намаз убактысы — Кыргызстан жана дүйнө шаарлары",
   };
   const descs: Record<Locale, string> = {
     uz: "O'zbekiston va dunyo shaharlari uchun namoz vaqtlarini toping. 80+ shahar: Toshkent, Moskva, Istanbul, Dubay. Hanafiy mazhab.",
     "uz-cyrl": "Ўзбекистон ва дунё шаҳарлари учун намоз вақтларини топинг. 80+ шаҳар. Ҳанафий мазҳаб.",
     ru: "Время намаза для городов Узбекистана и мира. 80+ городов: Ташкент, Москва, Стамбул, Дубай. Ханафитский мазхаб.",
     en: "Find prayer times for cities in Uzbekistan and worldwide. 80+ cities: Tashkent, Moscow, Istanbul, Dubai. Hanafi school.",
+    tg: "Вақти намоз барои шаҳрҳои Тоҷикистон ва ҷаҳон. 80+ шаҳр: Душанбе, Хуҷанд, Маскав. Мазҳаби Ҳанафӣ.",
+    ky: "Кыргызстан жана дүйнө шаарлары үчүн намаз убактысы. 80+ шаар: Бишкек, Ош, Москва. Ханафий мазхаб.",
   };
   return {
     title: titles[l],

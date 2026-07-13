@@ -25,6 +25,20 @@ export function cityFaqItems(name: string, times: ServerTimes | null, locale: Lo
         { q: `What are the Asr, Maghrib and Isha times in ${name} today?`, a: `Asr — ${times.asr}, Maghrib — ${times.maghrib}, Isha — ${times.isha}.` },
         { q: `What time is sunrise in ${name}?`, a: `Today, sunrise in ${name} is ${times.sunrise}.` },
       );
+    } else if (locale === "tg") {
+      items.push(
+        { q: `Имрӯз дар ${name} вақти Бомдод (Фаҷр) соати чанд?`, a: `Имрӯз вақти Бомдод (Фаҷр) дар ${name} — ${times.fajr}.` },
+        { q: `Дар ${name} вақти Пешин (Зуҳр) кай?`, a: `Имрӯз вақти Пешин (Зуҳр) дар ${name} — ${times.dhuhr}.` },
+        { q: `Вақти Аср, Шом ва Хуфтон дар ${name} имрӯз?`, a: `Аср — ${times.asr}, Шом (Мағриб) — ${times.maghrib}, Хуфтон (Ишо) — ${times.isha}.` },
+        { q: `Дар ${name} офтоб кай мебарояд?`, a: `Имрӯз баромади офтоб дар ${name} — ${times.sunrise}.` },
+      );
+    } else if (locale === "ky") {
+      items.push(
+        { q: `Бүгүн ${name}да Багымдат (Фажр) намазы саат канчада?`, a: `Бүгүн ${name}да Багымдат (Фажр) намаз убактысы — ${times.fajr}.` },
+        { q: `${name}да Бешим (Зухр) намазы качан?`, a: `Бүгүн ${name}да Бешим (Зухр) намаз убактысы — ${times.dhuhr}.` },
+        { q: `${name}да Аср, Шам жана Куптан намаз убактылары?`, a: `Аср — ${times.asr}, Шам (Магриб) — ${times.maghrib}, Куптан (Иша) — ${times.isha}.` },
+        { q: `${name}да күн чыгышы качан?`, a: `Бүгүн ${name}да күн чыгышы — ${times.sunrise}.` },
+      );
     } else if (locale === "uz-cyrl") {
       items.push(
         { q: `Бугун ${name}да бомдод намози соат нечада?`, a: `Бугун ${name}да бомдод (Фажр) намози вақти — ${times.fajr}.` },
@@ -59,6 +73,14 @@ export function cityFaqItems(name: string, times: ServerTimes | null, locale: Lo
     en: {
       q: `How are prayer times for ${name} calculated?`,
       a: `Prayer times are calculated using the Hanafi school and the Muslim World League (MWL) method, based on the city's geographic coordinates.`,
+    },
+    tg: {
+      q: `Вақти намоз барои ${name} бо кадом усул ҳисоб карда мешавад?`,
+      a: `Вақти намоз мувофиқи мазҳаби Ҳанафӣ ва усули Muslim World League (MWL) дар асоси координатаҳои ҷуғрофии шаҳр дақиқ ҳисоб карда мешавад.`,
+    },
+    ky: {
+      q: `${name} үчүн намаз убактысы кайсы ыкма менен эсептелет?`,
+      a: `Намаз убактысы Ханафий мазхабы жана Muslim World League (MWL) ыкмасы боюнча, шаардын географиялык координаттарынын негизинде так эсептелет.`,
     },
   };
   items.push(method[locale]);

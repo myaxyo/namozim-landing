@@ -7,19 +7,19 @@ import { INTERNATIONAL_CITIES } from "@/data/internationalCities";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://namozim.uz";
-  const locales = ["uz", "uz-cyrl", "ru", "en"];
+  const locales = ["uz", "uz-cyrl", "ru", "en", "tg", "ky"];
   const now = new Date();
 
   const homePages = locales.map((l) => ({
     url: `${base}/${l}`,
-    lastModified: new Date(),
+    lastModified: now,
     changeFrequency: "daily" as const,
     priority: 1,
   }));
 
   const citiesPages = locales.map((l) => ({
     url: `${base}/${l}/shaharlar`,
-    lastModified: new Date(),
+    lastModified: now,
     changeFrequency: "weekly" as const,
     priority: 0.9,
   }));
@@ -89,7 +89,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   return [
-    { url: base, lastModified: now, changeFrequency: "daily", priority: 1 },
     ...homePages,
     ...citiesPages,
     ...internationalIndexPages,

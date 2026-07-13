@@ -4,12 +4,21 @@ export interface City {
   nameCyrl?: string;
   nameRu: string;
   nameEn: string;
+  nameTg?: string;
+  nameKy?: string;
   lat: number;
   lng: number;
   region: string;
   regionRu: string;
   regionCyrl?: string;
+  regionTg?: string;
+  regionKy?: string;
+  /** Country code: "uz" | "tj" | "kg". Defaults to "uz" if omitted. */
+  country?: "uz" | "tj" | "kg";
 }
+
+import { CITIES_TJ } from "./citiesTj";
+import { CITIES_KG } from "./citiesKg";
 
 export const CITIES: City[] = [
   // Toshkent shahri
@@ -78,6 +87,10 @@ export const CITIES: City[] = [
   { slug: "tortqol", name: "To'rtko'l", nameRu: "Турткуль", nameEn: "Turtkul", nameCyrl: "Тўрткўл", lat: 41.5500, lng: 60.9167, region: "Qoraqalpog'iston Respublikasi", regionRu: "Республика Каракалпакстан" },
   { slug: "beruniy", name: "Beruniy", nameRu: "Беруни", nameEn: "Beruni", nameCyrl: "Беруний", lat: 41.6833, lng: 60.7500, region: "Qoraqalpog'iston Respublikasi", regionRu: "Республика Каракалпакстан" },
   { slug: "taxiatosh", name: "Taxiatosh", nameRu: "Тахиаташ", nameEn: "Takhiatash", nameCyrl: "Тахиатош", lat: 42.2500, lng: 59.6167, region: "Qoraqalpog'iston Respublikasi", regionRu: "Республика Каракалпакстан" },
+  // Tajikistan cities
+  ...CITIES_TJ,
+  // Kyrgyzstan cities
+  ...CITIES_KG,
 ];
 
 export function getCityBySlug(slug: string): City | undefined {
@@ -85,6 +98,8 @@ export function getCityBySlug(slug: string): City | undefined {
 }
 
 export function getCityName(city: City, locale: string): string {
+  if (locale === "tg" && city.nameTg) return city.nameTg;
+  if (locale === "ky" && city.nameKy) return city.nameKy;
   if (locale === "uz-cyrl") return city.nameCyrl || city.nameRu;
   if (locale === "ru") return city.nameRu;
   if (locale === "en") return city.nameEn;
@@ -92,6 +107,8 @@ export function getCityName(city: City, locale: string): string {
 }
 
 export function getCityRegion(city: City, locale: string): string {
+  if (locale === "tg" && city.regionTg) return city.regionTg;
+  if (locale === "ky" && city.regionKy) return city.regionKy;
   if (locale === "uz-cyrl") return city.regionCyrl || city.regionRu;
   if (locale === "ru") return city.regionRu;
   return city.region;
