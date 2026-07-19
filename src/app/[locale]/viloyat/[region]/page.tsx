@@ -30,8 +30,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!region) return {};
   const name = getRegionName(region, l);
   const times = await fetchPrayerTimesServer(region.lat, region.lng);
+  const prayerLabels: Record<Locale, [string, string, string, string, string]> = {
+    uz: ["Bomdod", "Peshin", "Asr", "Shom", "Xufton"],
+    "uz-cyrl": ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
+    ru: ["Фаджр", "Зухр", "Аср", "Магриб", "Иша"],
+    en: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
+    tg: ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
+    ky: ["Багымдат", "Бешим", "Аср", "Шам", "Куптан"],
+  };
+  const [lF, lD, lA, lM, lI] = prayerLabels[l];
   const timesStr = times
-    ? `Bomdod: ${times.fajr} | Peshin: ${times.dhuhr} | Asr: ${times.asr} | Shom: ${times.maghrib} | Xufton: ${times.isha}`
+    ? `${lF}: ${times.fajr} | ${lD}: ${times.dhuhr} | ${lA}: ${times.asr} | ${lM}: ${times.maghrib} | ${lI}: ${times.isha}`
     : "";
 
   const titles: Record<Locale, string> = {
@@ -40,12 +49,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ru: `Время намаза ${name} сегодня 2026`,
     en: `Prayer Times ${name} Today 2026`,
     tg: `Вақти намоз ${name} имрӯз 2026`,
-    ky: `${name} намаз убактысы бүгүн 2026`,
+    ky: `Намаз убактысы ${name} бүгүн 2026`,
+  };
+
+  const regionDescs: Record<Locale, string> = {
+    uz: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab. Shaharlar va tumanlar.`,
+    "uz-cyrl": `${name} намоз вақтлари бугун: ${timesStr}. Ҳанафий мазҳаб.`,
+    ru: `Время намаза ${name} сегодня: ${timesStr}. Ханафитский мазхаб. Города и районы.`,
+    en: `Prayer times ${name} today: ${timesStr}. Hanafi school. Cities and districts.`,
+    tg: `Вақти намоз ${name} имрӯз: ${timesStr}. Мазҳаби Ҳанафӣ.`,
+    ky: `${name} намаз убактысы бүгүн: ${timesStr}. Ханафий мазхаб.`,
   };
 
   return {
     title: titles[l],
-    description: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab.`,
+    description: regionDescs[l],
     alternates: {
       canonical: `https://namozim.uz/${locale}/viloyat/${slug}`,
       languages: hreflangAlternates(`/viloyat/${slug}`),

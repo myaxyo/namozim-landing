@@ -59,8 +59,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       : `${name} намаз убактысы бүгүн 2026 — ${country}`,
   };
 
+  const prayerLabels: Record<Locale, [string, string, string, string, string]> = {
+    uz: ["Bomdod", "Peshin", "Asr", "Shom", "Xufton"],
+    "uz-cyrl": ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
+    ru: ["Фаджр", "Зухр", "Аср", "Магриб", "Иша"],
+    en: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
+    tg: ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
+    ky: ["Багымдат", "Бешим", "Аср", "Шам", "Куптан"],
+  };
+  const [lF, lD, lA, lM, lI] = prayerLabels[l];
   const timesStr = times
-    ? `Bomdod: ${times.fajr} | Peshin: ${times.dhuhr} | Asr: ${times.asr} | Shom: ${times.maghrib} | Xufton: ${times.isha}`
+    ? `${lF}: ${times.fajr} | ${lD}: ${times.dhuhr} | ${lA}: ${times.asr} | ${lM}: ${times.maghrib} | ${lI}: ${times.isha}`
     : "";
 
   const descs: Record<Locale, string> = {

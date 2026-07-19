@@ -34,8 +34,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Fetch actual prayer times for dynamic meta title + description
   const times = await fetchPrayerTimesServer(city.lat, city.lng);
+
+  // Localized prayer time string for descriptions
+  const prayerLabels: Record<Locale, [string, string, string, string, string]> = {
+    uz: ["Bomdod", "Peshin", "Asr", "Shom", "Xufton"],
+    "uz-cyrl": ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
+    ru: ["Фаджр", "Зухр", "Аср", "Магриб", "Иша"],
+    en: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
+    tg: ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
+    ky: ["Багымдат", "Бешим", "Аср", "Шам", "Куптан"],
+  };
+  const [lFajr, lDhuhr, lAsr, lMaghrib, lIsha] = prayerLabels[l];
   const timesStr = times
-    ? `Bomdod: ${times.fajr} | Peshin: ${times.dhuhr} | Asr: ${times.asr} | Shom: ${times.maghrib} | Xufton: ${times.isha}`
+    ? `${lFajr}: ${times.fajr} | ${lDhuhr}: ${times.dhuhr} | ${lAsr}: ${times.asr} | ${lMaghrib}: ${times.maghrib} | ${lIsha}: ${times.isha}`
     : "";
 
   const titles: Record<Locale, string> = {
