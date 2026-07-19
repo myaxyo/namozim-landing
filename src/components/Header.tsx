@@ -5,7 +5,7 @@ import { Locale, t } from "@/data/translations";
 export function Header({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const locales: Locale[] = ["uz", "uz-cyrl", "ru", "en", "tg", "ky"];
-  const labels: Record<Locale, string> = { uz: "UZ", "uz-cyrl": "ЎЗ", ru: "RU", en: "EN", tg: "TG", ky: "KY" };
+  const labels: Record<Locale, string> = { uz: "UZ", "uz-cyrl": "ЎЗ", ru: "RU", en: "EN", tg: "TJ", ky: "KG" };
 
   return (
     <header className="sticky top-0 z-50 bg-surface/85 backdrop-blur-lg border-b border-border-light">
