@@ -82,11 +82,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "https://namozim.uz/favicon.ico", sizes: "any", type: "image/x-icon" },
+      { url: "https://namozim.uz/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "https://namozim.uz/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/apple-touch-icon.png",
+    shortcut: "https://namozim.uz/favicon.ico",
+    apple: "https://namozim.uz/apple-touch-icon.png",
   },
   manifest: "/manifest.json",
 };
