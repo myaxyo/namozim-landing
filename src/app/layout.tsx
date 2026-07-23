@@ -120,6 +120,7 @@ export default function RootLayout({
                 sameAs: [
                   "https://play.google.com/store/apps/details?id=com.mo_dev.nomozvaqti",
                   "https://apps.apple.com/us/app/namozim/id6761498579",
+                  "https://www.rustore.ru/catalog/app/com.mo_dev.nomozvaqti",
                 ],
               },
               {
@@ -142,6 +143,7 @@ export default function RootLayout({
                 downloadUrl: [
                   "https://play.google.com/store/apps/details?id=com.mo_dev.nomozvaqti",
                   "https://apps.apple.com/us/app/namozim/id6761498579",
+                  "https://www.rustore.ru/catalog/app/com.mo_dev.nomozvaqti",
                 ],
                 offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 author: {
