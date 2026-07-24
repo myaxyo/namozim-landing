@@ -107,6 +107,7 @@ export default function RootLayout({
   return (
     <html lang="uz" suppressHydrationWarning className={`${cormorant.variable} ${inter.variable}`}>
       <head>
+        <script defer src="/stats/script.js" data-website-id="5a9a36da-80a4-4694-a96c-12991f299a2d" data-host-url="/stats" />
         <JsonLd
           data={{
             "@context": "https://schema.org",
