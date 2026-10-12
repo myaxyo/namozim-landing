@@ -2,10 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { toPng } from "html-to-image";
 import { Locale, t } from "@/data/translations";
-
-interface Times {
-  fajr: string; sunrise: string; dhuhr: string; asr: string; maghrib: string; isha: string;
-}
+import { type Times, getPrayerTimes, makePlace, placeForBrowser } from "@/lib/prayerTimes";
 
 const ICONS: Record<string, string> = { fajr: "\u{1F319}", sunrise: "\u{1F305}", dhuhr: "\u{2600}\u{FE0F}", asr: "\u{1F324}", maghrib: "\u{1F307}", isha: "\u{2728}" };
 
@@ -30,6 +27,7 @@ function formatDate(d: Date, locale: Locale): string {
 
 export function PrayerTimes({ locale }: { locale: Locale }) {
   const [times, setTimes] = useState<Times | null>(null);
+  const [officialUz, setOfficialUz] = useState(true);
   const [city, setCity] = useState("");
   const [countdown, setCountdown] = useState("");
   const [nextPrayer, setNextPrayer] = useState("fajr");
@@ -42,18 +40,16 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
     setDate(formatDate(new Date(), locale));
   }, [locale]);
 
-  const fetchTimes = useCallback(async (lat: number, lng: number) => {
+  // Calculated locally. Visitors in Uzbekistan get the Muslim Board timetable; others get MWL.
+  const fetchTimes = useCallback((lat: number, lng: number) => {
     try {
-      const d = new Date();
-      const ds = `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
-      const res = await fetch(`https://api.aladhan.com/v1/timings/${ds}?latitude=${lat}&longitude=${lng}&method=3&school=1`);
-      const data = await res.json();
-      if (data.data?.timings) {
-        const tm = data.data.timings;
-        const clean = (s: string) => s.replace(/ \(.*\)/, "");
-        setTimes({ fajr: clean(tm.Fajr), sunrise: clean(tm.Sunrise), dhuhr: clean(tm.Dhuhr), asr: clean(tm.Asr), maghrib: clean(tm.Maghrib), isha: clean(tm.Isha) });
-      }
+      const place = placeForBrowser(lat, lng);
+      setOfficialUz(place.method === "uzbekistan");
+      setTimes(getPrayerTimes(place));
     } catch { /* silent */ }
+  }, []);
+  const fetchTashkent = useCallback(() => {
+    setTimes(getPrayerTimes(makePlace({ lat: 41.2995, lng: 69.2401, offsetMin: 0 })));
   }, []);
 
   const resolveCity = useCallback(async (lat: number, lng: number) => {
@@ -79,14 +75,14 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
         },
         () => {
           setCity("Toshkent");
-          fetchTimes(41.2995, 69.2401);
+          fetchTashkent();
         }
       );
     } else {
       setCity("Toshkent");
-      fetchTimes(41.2995, 69.2401);
+      fetchTashkent();
     }
-  }, [fetchTimes, resolveCity]);
+  }, [fetchTimes, fetchTashkent, resolveCity]);
 
   // Countdown — only depends on times, doesn't re-render the whole component
   useEffect(() => {
@@ -122,7 +118,7 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
           <p className="text-text-secondary text-base md:text-lg">
             {city ? <>{city} &mdash; </> : null}{date}
           </p>
-          <p className="text-text-muted text-sm mt-1">{t(locale, "hero_method")}</p>
+          <p className="text-text-muted text-sm mt-1">{t(locale, officialUz ? "method_uz" : "hero_method")}</p>
         </div>
 
         <div ref={cardRef} className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm">

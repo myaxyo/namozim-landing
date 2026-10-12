@@ -93,7 +93,8 @@ export function getPrayerBySlug(slug: string): PrayerInfo | undefined {
 }
 
 export function getPrayerName(p: PrayerInfo, locale: Locale): string {
-  if (locale === "tg") return p.nameTg || p.nameUz;
+  // nameTg is the Cyrillic spelling (Бомдод, Пешин, …), identical for Uzbek Cyrillic.
+  if (locale === "tg" || locale === "uz-cyrl") return p.nameTg || p.nameUz;
   if (locale === "ky") return p.nameKy || p.nameUz;
   if (locale === "ru") return p.nameRu;
   if (locale === "en") return p.nameEn;

@@ -3,21 +3,28 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { toPng } from "html-to-image";
 import { City, getCityName, getCityRegion } from "@/data/cities";
 import { Locale, t } from "@/data/translations";
-
-interface Times {
-  fajr: string; sunrise: string; dhuhr: string; asr: string; maghrib: string; isha: string;
-}
+import { type Place, type Times, getPrayerTimes, secondsNowIn } from "@/lib/prayerTimes";
 
 const ICONS: Record<string, string> = { fajr: "\u{1F319}", sunrise: "\u{1F305}", dhuhr: "\u{2600}\u{FE0F}", asr: "\u{1F324}", maghrib: "\u{1F307}", isha: "\u{2728}" };
 
-export function CityPrayerTimes({ city, locale }: { city: City; locale: Locale }) {
-  const [times, setTimes] = useState<Times | null>(null);
+export function CityPrayerTimes({
+  city,
+  locale,
+  place,
+  initialTimes,
+}: {
+  city: City;
+  locale: Locale;
+  /** Where/how to calculate (built on the server with placeForCity / placeForDistrict / …). */
+  place: Place;
+  /** Server-calculated times so they are in the initial HTML (SEO + no spinner). */
+  initialTimes: Times;
+}) {
+  const [times, setTimes] = useState<Times>(initialTimes);
   const [countdown, setCountdown] = useState("");
   const [nextPrayer, setNextPrayer] = useState("fajr");
-  const [loading, setLoading] = useState(true);
   const [date, setDate] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
-  const dateLocale = locale === "ru" ? "ru-RU" : locale === "en" ? "en-US" : "uz-Latn-UZ";
 
   const formatDate = (d: Date): string => {
     if (locale === "ru") return d.toLocaleDateString("ru-RU", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
@@ -34,30 +41,23 @@ export function CityPrayerTimes({ city, locale }: { city: City; locale: Locale }
   const name = getCityName(city, locale);
   const region = getCityRegion(city, locale);
 
-  const fetchTimes = useCallback(async () => {
-    setLoading(true);
-    try {
-      const d = new Date();
-      setDate(formatDate(d));
-      const ds = `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
-      const res = await fetch(`https://api.aladhan.com/v1/timings/${ds}?latitude=${city.lat}&longitude=${city.lng}&method=3&school=1`);
-      const data = await res.json();
-      if (data.data?.timings) {
-        const tm = data.data.timings;
-        const clean = (s: string) => s.replace(/ \(.*\)/, "");
-        setTimes({ fajr: clean(tm.Fajr), sunrise: clean(tm.Sunrise), dhuhr: clean(tm.Dhuhr), asr: clean(tm.Asr), maghrib: clean(tm.Maghrib), isha: clean(tm.Isha) });
-      }
-    } catch { /* silent */ }
-    setLoading(false);
-  }, [city, dateLocale]);
+  // Recalculate in the browser: the cached HTML may be from an earlier day.
+  const refresh = useCallback(() => {
+    setDate(formatDate(new Date()));
+    setTimes(getPrayerTimes(place));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [place.lat, place.lng, place.method, place.offsetMin, place.timeZone, locale]);
 
-  useEffect(() => { fetchTimes(); }, [fetchTimes]);
+  useEffect(() => {
+    const id = setTimeout(refresh, 0);
+    return () => clearTimeout(id);
+  }, [refresh]);
 
   useEffect(() => {
     if (!times) return;
     const tick = () => {
-      const now = new Date();
-      const sec = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
+      // Seconds since midnight at the place, so the countdown is right in any viewer time zone.
+      const sec = secondsNowIn(place.timeZone);
       const prayers = ["fajr","dhuhr","asr","maghrib","isha"] as const;
       let next = ""; let nSec = 0;
       for (const p of prayers) { const [h,m] = times[p].split(":").map(Number); const ps = h*3600+m*60; if (ps > sec) { next=p; nSec=ps; break; } }
@@ -67,7 +67,7 @@ export function CityPrayerTimes({ city, locale }: { city: City; locale: Locale }
       setCountdown(`${Math.floor(d/3600)}:${String(Math.floor((d%3600)/60)).padStart(2,"0")}:${String(d%60).padStart(2,"0")}`);
     };
     tick(); const i = setInterval(tick, 1000); return () => clearInterval(i);
-  }, [times]);
+  }, [times, place.timeZone]);
 
   return (
     <section className="py-16 md:py-24">
@@ -77,14 +77,10 @@ export function CityPrayerTimes({ city, locale }: { city: City; locale: Locale }
             {t(locale, "nav_prayer_times")} — {name}
           </h1>
           <p className="text-text-secondary text-base md:text-lg">{region} &mdash; {date}</p>
-          <p className="text-text-muted text-sm mt-1">{t(locale, "hero_method")}</p>
+          <p className="text-text-muted text-sm mt-1">{t(locale, place.method === "uzbekistan" ? "method_uz" : "hero_method")}</p>
         </div>
 
-        {loading ? (
-          <div className="bg-surface rounded-2xl border border-border p-12 text-center">
-            <div className="animate-spin w-7 h-7 border-2 border-primary border-t-transparent rounded-full mx-auto" />
-          </div>
-        ) : times && (
+        {(
           <div ref={cardRef} className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm">
             <div className="bg-gradient-to-r from-hero-from to-hero-to px-6 py-8 text-center">
               <p className="text-white/70 text-xs uppercase tracking-widest mb-1">{t(locale, nextPrayer)} {t(locale, "countdown_label")}</p>
@@ -112,7 +108,7 @@ export function CityPrayerTimes({ city, locale }: { city: City; locale: Locale }
         )}
 
         {/* Download as image button */}
-        {!loading && times && (
+        {(
           <div className="mt-4 text-center">
             <button
               onClick={async () => {

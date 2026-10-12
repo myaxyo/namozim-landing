@@ -7,8 +7,10 @@ import {
   getInternationalCityCountry,
 } from "@/data/internationalCities";
 import { Locale, t } from "@/data/translations";
-import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
+import { getPrayerTimes } from "@/lib/prayerTimes";
+import { placeForInternational } from "@/lib/places";
 import { hreflangAlternates } from "@/lib/seo";
+import { worldCityCopy } from "@/lib/seoCopy";
 import { cityFaqItems } from "@/data/faq";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
 import { Header } from "@/components/Header";
@@ -20,6 +22,9 @@ import { Footer } from "@/components/Footer";
 interface Props {
   params: Promise<{ locale: string; city: string }>;
 }
+
+// Hourly ISR keeps server-rendered times and the month in the title current.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   const locales = ["uz", "uz-cyrl", "ru", "en", "tg", "ky"];
@@ -35,58 +40,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!city) return {};
   const name = getInternationalCityName(city, l);
   const country = getInternationalCityCountry(city, l);
-
-  const times = await fetchPrayerTimesServer(city.lat, city.lng);
-
-  const titles: Record<Locale, string> = {
-    uz: times
-      ? `${name} namoz vaqtlari bugun ✓ Bomdod ${times.fajr} | Shom ${times.maghrib}`
-      : `${name} namoz vaqtlari bugun 2026 — ${country}`,
-    "uz-cyrl": times
-      ? `${name} намоз вақтлари бугун ✓ Бомдод ${times.fajr} | Шом ${times.maghrib}`
-      : `${name} намоз вақтлари бугун 2026 — ${country}`,
-    ru: times
-      ? `Намаз ${name} сегодня ✓ Фаджр ${times.fajr} | Магриб ${times.maghrib}`
-      : `Время намаза ${name} сегодня 2026 — ${country}`,
-    en: times
-      ? `${name} Prayer Times Today ✓ Fajr ${times.fajr} | Maghrib ${times.maghrib}`
-      : `${name} Prayer Times Today 2026 — ${country}`,
-    tg: times
-      ? `${name} вақти намоз имрӯз ✓ Бомдод ${times.fajr} | Шом ${times.maghrib}`
-      : `${name} вақти намоз имрӯз 2026 — ${country}`,
-    ky: times
-      ? `${name} намаз убактысы бүгүн ✓ Багымдат ${times.fajr} | Шам ${times.maghrib}`
-      : `${name} намаз убактысы бүгүн 2026 — ${country}`,
-  };
-
-  const prayerLabels: Record<Locale, [string, string, string, string, string]> = {
-    uz: ["Bomdod", "Peshin", "Asr", "Shom", "Xufton"],
-    "uz-cyrl": ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
-    ru: ["Фаджр", "Зухр", "Аср", "Магриб", "Иша"],
-    en: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
-    tg: ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
-    ky: ["Багымдат", "Бешим", "Аср", "Шам", "Куптан"],
-  };
-  const [lF, lD, lA, lM, lI] = prayerLabels[l];
-  const timesStr = times
-    ? `${lF}: ${times.fajr} | ${lD}: ${times.dhuhr} | ${lA}: ${times.asr} | ${lM}: ${times.maghrib} | ${lI}: ${times.isha}`
-    : "";
-
-  const descs: Record<Locale, string> = {
-    uz: `${name} (${country}) namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab, MWL usuli.`,
-    "uz-cyrl": `${name} (${country}) намоз вақтлари бугун: ${timesStr}. Ҳанафий мазҳаб, MWL усули.`,
-    ru: `Время намаза в городе ${name} (${country}) сегодня: ${timesStr}. Ханафитский мазхаб, метод MWL.`,
-    en: `Prayer times in ${name}, ${country} today: ${timesStr}. Hanafi school, MWL method.`,
-    tg: `Вақти намоз дар ${name} (${country}) имрӯз: ${timesStr}. Мазҳаби Ҳанафӣ, усули MWL.`,
-    ky: `${name} (${country}) намаз убактысы бүгүн: ${timesStr}. Ханафий мазхаб, MWL ыкмасы.`,
-  };
+  const { title, description } = worldCityCopy(l, name, country);
 
   return {
-    title: titles[l],
-    description: descs[l],
+    title,
+    description,
     openGraph: {
-      title: titles[l],
-      description: descs[l],
+      title,
+      description,
       url: `https://namozim.uz/${locale}/dunyo/${slug}`,
     },
     alternates: {
@@ -104,7 +65,8 @@ export default async function InternationalCityPage({ params }: Props) {
 
   const name = getInternationalCityName(city, l);
   const country = getInternationalCityCountry(city, l);
-  const serverTimes = await fetchPrayerTimesServer(city.lat, city.lng);
+  const place = placeForInternational(city);
+  const serverTimes = getPrayerTimes(place);
 
   // Adapt InternationalCity to the City interface expected by CityPrayerTimes
   const cityAdapter = {
@@ -135,7 +97,7 @@ export default async function InternationalCityPage({ params }: Props) {
         ]}
       />
       <main>
-        <CityPrayerTimes city={cityAdapter} locale={l} />
+        <CityPrayerTimes city={cityAdapter} locale={l} place={place} initialTimes={serverTimes} />
 
         <section className="py-12">
           <div className="max-w-3xl mx-auto px-5">
