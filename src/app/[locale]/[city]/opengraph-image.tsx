@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getCityBySlug, getCityName, CITIES } from "@/data/cities";
-import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
+import { getPrayerTimes } from "@/lib/prayerTimes";
+import { placeForCity } from "@/lib/places";
 import { Locale } from "@/data/translations";
 
 export const size = { width: 1200, height: 630 };
@@ -14,14 +15,18 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
   if (!city) return new ImageResponse(<div>Not found</div>, { ...size });
 
   const name = getCityName(city, l);
-  const times = await fetchPrayerTimesServer(city.lat, city.lng);
+  const place = placeForCity(city);
+  const times = getPrayerTimes(place);
+  const officialUz = place.method === "uzbekistan";
 
   const prayers = l === "ru"
     ? [{ n: "Фаджр", t: times?.fajr }, { n: "Зухр", t: times?.dhuhr }, { n: "Аср", t: times?.asr }, { n: "Магриб", t: times?.maghrib }, { n: "Иша", t: times?.isha }]
     : [{ n: "Bomdod", t: times?.fajr }, { n: "Peshin", t: times?.dhuhr }, { n: "Asr", t: times?.asr }, { n: "Shom", t: times?.maghrib }, { n: "Xufton", t: times?.isha }];
 
   const title = l === "ru" ? `Время намаза — ${name}` : l === "en" ? `Prayer Times — ${name}` : `Namoz vaqtlari — ${name}`;
-  const subtitle = l === "ru" ? "Ханафитский мазхаб • Muslim World League" : l === "en" ? "Hanafi School • Muslim World League" : "Hanafiy mazhab • Muslim World League";
+  const subtitle = officialUz
+    ? (l === "ru" ? "Календарь Управления мусульман Узбекистана" : l === "en" ? "Muslim Board of Uzbekistan timetable" : "O'zbekiston musulmonlari idorasi taqvimi")
+    : (l === "ru" ? "Ханафитский мазхаб • Muslim World League" : l === "en" ? "Hanafi School • Muslim World League" : "Hanafiy mazhab • Muslim World League");
   const today = new Date().toLocaleDateString(l === "ru" ? "ru-RU" : l === "en" ? "en-US" : "uz-Latn-UZ", { day: "numeric", month: "long", year: "numeric" });
 
   return new ImageResponse(

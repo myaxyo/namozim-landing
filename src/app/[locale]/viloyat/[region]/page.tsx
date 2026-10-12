@@ -4,8 +4,10 @@ import { REGIONS, getRegionBySlug, getRegionName } from "@/data/regions";
 import { CITIES, getCityName } from "@/data/cities";
 import { getDistrictsByCity, getDistrictName } from "@/data/districts";
 import { Locale, t } from "@/data/translations";
-import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
+import { getPrayerTimes } from "@/lib/prayerTimes";
+import { placeForCity } from "@/lib/places";
 import { hreflangAlternates } from "@/lib/seo";
+import { regionCopy } from "@/lib/seoCopy";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
 import { Header } from "@/components/Header";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -15,6 +17,9 @@ import { Footer } from "@/components/Footer";
 interface Props {
   params: Promise<{ locale: string; region: string }>;
 }
+
+// Hourly ISR keeps server-rendered times and the year in the title current.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   const locales = ["uz", "uz-cyrl", "ru", "en", "tg", "ky"];
@@ -29,41 +34,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const region = getRegionBySlug(slug);
   if (!region) return {};
   const name = getRegionName(region, l);
-  const times = await fetchPrayerTimesServer(region.lat, region.lng);
-  const prayerLabels: Record<Locale, [string, string, string, string, string]> = {
-    uz: ["Bomdod", "Peshin", "Asr", "Shom", "Xufton"],
-    "uz-cyrl": ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
-    ru: ["Фаджр", "Зухр", "Аср", "Магриб", "Иша"],
-    en: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
-    tg: ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
-    ky: ["Багымдат", "Бешим", "Аср", "Шам", "Куптан"],
-  };
-  const [lF, lD, lA, lM, lI] = prayerLabels[l];
-  const timesStr = times
-    ? `${lF}: ${times.fajr} | ${lD}: ${times.dhuhr} | ${lA}: ${times.asr} | ${lM}: ${times.maghrib} | ${lI}: ${times.isha}`
-    : "";
-
-  const titles: Record<Locale, string> = {
-    uz: `Namoz vaqtlari ${name} bugun 2026`,
-    "uz-cyrl": `Намоз вақтлари ${name} бугун 2026`,
-    ru: `Время намаза ${name} сегодня 2026`,
-    en: `Prayer Times ${name} Today 2026`,
-    tg: `Вақти намоз ${name} имрӯз 2026`,
-    ky: `Намаз убактысы ${name} бүгүн 2026`,
-  };
-
-  const regionDescs: Record<Locale, string> = {
-    uz: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab. Shaharlar va tumanlar.`,
-    "uz-cyrl": `${name} намоз вақтлари бугун: ${timesStr}. Ҳанафий мазҳаб.`,
-    ru: `Время намаза ${name} сегодня: ${timesStr}. Ханафитский мазхаб. Города и районы.`,
-    en: `Prayer times ${name} today: ${timesStr}. Hanafi school. Cities and districts.`,
-    tg: `Вақти намоз ${name} имрӯз: ${timesStr}. Мазҳаби Ҳанафӣ.`,
-    ky: `${name} намаз убактысы бүгүн: ${timesStr}. Ханафий мазхаб.`,
-  };
+  const { title, description } = regionCopy(l, name);
 
   return {
-    title: titles[l],
-    description: regionDescs[l],
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://namozim.uz/${locale}/viloyat/${slug}`,
+    },
     alternates: {
       canonical: `https://namozim.uz/${locale}/viloyat/${slug}`,
       languages: hreflangAlternates(`/viloyat/${slug}`),
@@ -86,6 +66,8 @@ export default async function RegionPage({ params }: Props) {
   );
   // Get districts
   const districts = getDistrictsByCity(region.citySlug);
+  const mainPlace = mainCity ? placeForCity(mainCity) : null;
+  const mainTimes = mainPlace ? getPrayerTimes(mainPlace) : null;
 
   return (
     <>
@@ -98,7 +80,9 @@ export default async function RegionPage({ params }: Props) {
         ]}
       />
       <main>
-        {mainCity && <CityPrayerTimes city={mainCity} locale={l} />}
+        {mainCity && mainPlace && mainTimes && (
+          <CityPrayerTimes city={mainCity} locale={l} place={mainPlace} initialTimes={mainTimes} />
+        )}
         <section className="py-12">
           <div className="max-w-3xl mx-auto px-5">
             <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-text mb-4">

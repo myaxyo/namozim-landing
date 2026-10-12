@@ -5,10 +5,12 @@ import { Locale, t } from "@/data/translations";
  * Visual prayer times card rendered as HTML but styled to look like an infographic.
  * Google Images indexes visible content on pages — this gives us image-search presence.
  */
-export function PrayerTimesImage({ locale, city, times }: {
+export function PrayerTimesImage({ locale, city, times, officialUz = false }: {
   locale: Locale;
   city: string;
   times: { fajr: string; dhuhr: string; asr: string; maghrib: string; isha: string } | null;
+  /** Label the card with the Muslim Board of Uzbekistan timetable instead of MWL. */
+  officialUz?: boolean;
 }) {
   if (!times) return null;
 
@@ -21,7 +23,7 @@ export function PrayerTimesImage({ locale, city, times }: {
   return (
     <figure className="my-8" aria-label={`${city} namoz vaqtlari`}>
       <div className="bg-gradient-to-br from-hero-from to-hero-to rounded-2xl p-6 max-w-md mx-auto">
-        <p className="text-white/60 text-xs uppercase tracking-wider text-center mb-1">{t(locale, "hero_method")}</p>
+        <p className="text-white/60 text-xs uppercase tracking-wider text-center mb-1">{t(locale, officialUz ? "method_uz" : "hero_method")}</p>
         <h3 className="text-white text-center font-[family-name:var(--font-display)] text-2xl font-bold mb-4">{city}</h3>
         <div className="space-y-2">
           {prayers.map((p) => (

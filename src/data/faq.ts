@@ -1,13 +1,19 @@
 import { Locale } from "./translations";
 import { QA } from "@/lib/seo";
-import { ServerTimes } from "@/lib/fetchPrayerTimes";
+import type { Times } from "@/lib/prayerTimes";
 
 /**
  * Builds localized FAQ items for a location (city or district) using the
  * real, server-fetched prayer times. The same items power both the visible
  * accordion and the FAQPage JSON-LD, so they always match.
  */
-export function cityFaqItems(name: string, times: ServerTimes | null, locale: Locale): QA[] {
+export function cityFaqItems(
+  name: string,
+  times: Times | null,
+  locale: Locale,
+  /** True when the place uses the Muslim Board of Uzbekistan timetable. */
+  officialUz = false,
+): QA[] {
   const items: QA[] = [];
 
   if (times) {
@@ -83,7 +89,16 @@ export function cityFaqItems(name: string, times: ServerTimes | null, locale: Lo
       a: `Намаз убактысы Ханафий мазхабы жана Muslim World League (MWL) ыкмасы боюнча, шаардын географиялык координаттарынын негизинде так эсептелет.`,
     },
   };
-  items.push(method[locale]);
+  // Uzbekistan: times follow the Muslim Board's official calendar, not a generic method.
+  const official: Record<Locale, string> = {
+    uz: `Namoz vaqtlari O'zbekiston musulmonlari idorasining rasmiy taqvimi asosida ko'rsatiladi: Bomdod va Xufton 15,5° burchak bo'yicha, Asr Hanafiy mazhabi bo'yicha, har bir hudud uchun Toshkentga nisbatan belgilangan daqiqa farqi bilan.`,
+    "uz-cyrl": `Намоз вақтлари Ўзбекистон мусулмонлари идорасининг расмий тақвими асосида кўрсатилади: Бомдод ва Хуфтон 15,5° бурчак бўйича, Аср Ҳанафий мазҳаби бўйича, ҳар бир ҳудуд учун Тошкентга нисбатан белгиланган дақиқа фарқи билан.`,
+    ru: `Время намаза указано по официальному календарю Управления мусульман Узбекистана: Фаджр и Иша — по углу 15,5°, Аср — по ханафитскому мазхабу, с установленной разницей в минутах относительно Ташкента для каждого района.`,
+    en: `Prayer times follow the official timetable of the Muslim Board of Uzbekistan: Fajr and Isha at 15.5°, Asr by the Hanafi school, with each area's official minute difference from Tashkent.`,
+    tg: `Вақти намоз аз рӯи тақвими расмии Идораи мусулмонони Ӯзбекистон нишон дода мешавад: Бомдод ва Хуфтон бо кунҷи 15,5°, Аср мувофиқи мазҳаби Ҳанафӣ, бо фарқи муайяни дақиқа нисбат ба Тошкент.`,
+    ky: `Намаз убактысы Өзбекстан мусулмандар башкармасынын расмий календары боюнча көрсөтүлөт: Багымдат жана Куптан 15,5° бурч боюнча, Аср Ханафий мазхабы боюнча, ар бир аймак үчүн Ташкентке салыштырмалуу белгиленген мүнөт айырмасы менен.`,
+  };
+  items.push(officialUz ? { q: method[locale].q, a: official[locale] } : method[locale]);
 
   return items;
 }

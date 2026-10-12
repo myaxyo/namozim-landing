@@ -87,3 +87,21 @@ export function getInternationalCityCountry(city: InternationalCity, locale: str
   if (locale === "en") return city.countryEn;
   return city.country;
 }
+
+/** IANA time zone per international city (used to format locally calculated times). */
+const INTERNATIONAL_TZ: Record<string, string> = {
+  moskva: "Europe/Moscow", "sankt-peterburg": "Europe/Moscow", kazan: "Europe/Moscow",
+  novosibirsk: "Asia/Novosibirsk", yekaterinburg: "Asia/Yekaterinburg", krasnoyarsk: "Asia/Krasnoyarsk",
+  vladivostok: "Asia/Vladivostok", ufa: "Asia/Yekaterinburg",
+  istanbul: "Europe/Istanbul", antalya: "Europe/Istanbul", ankara: "Europe/Istanbul",
+  dubay: "Asia/Dubai", "abu-dabi": "Asia/Dubai", sharjah: "Asia/Dubai",
+  seul: "Asia/Seoul", pusan: "Asia/Seoul",
+  almaty: "Asia/Almaty", "nur-sultan": "Asia/Almaty", shimkent: "Asia/Almaty",
+  bishkek: "Asia/Bishkek", osh: "Asia/Bishkek", dushanbe: "Asia/Dushanbe",
+  makka: "Asia/Riyadh", madina: "Asia/Riyadh", jidda: "Asia/Riyadh",
+  "new-york": "America/New_York", london: "Europe/London", berlin: "Europe/Berlin", tokio: "Asia/Tokyo",
+};
+
+export function getInternationalCityTimeZone(city: InternationalCity): string {
+  return INTERNATIONAL_TZ[city.slug] ?? "UTC";
+}

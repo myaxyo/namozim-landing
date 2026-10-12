@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Namoz Vaqtlari 2026 — Aniq Namoz Vaqti | Bomdod, Peshin, Asr, Shom, Xufton",
   description:
-    "Dunyo bo'ylab bugungi aniq namoz vaqtlari. O'zbekiston, Rossiya, Turkiya, BAA, Koreya va boshqa mamlakatlar. Hanafiy mazhab, Muslim World League usuli. Bepul onlayn xizmat.",
+    "Dunyo bo'ylab bugungi aniq namoz vaqtlari. O'zbekiston, Rossiya, Turkiya, BAA, Koreya va boshqa mamlakatlar. O‘zbekiston uchun — O‘zbekiston musulmonlari idorasi rasmiy taqvimi, Hanafiy mazhab. Bepul onlayn xizmat.",
   keywords: [
     "namoz vaqtlari",
     "namoz vaqti",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Namoz Vaqtlari — Dunyo bo'ylab | Namozim",
     description:
-      "Dunyo bo'ylab bugungi aniq namoz vaqtlari. Hanafiy mazhab, Muslim World League usuli.",
+      "Dunyo bo'ylab bugungi aniq namoz vaqtlari. O‘zbekiston uchun — O‘zbekiston musulmonlari idorasi rasmiy taqvimi, Hanafiy mazhab.",
   },
   alternates: {
     languages: hreflangAlternates(""),

@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { CITIES, getCityBySlug, getCityName, getCityRegion } from "@/data/cities";
 import { getDistrictsByCity, getDistrictName } from "@/data/districts";
 import { Locale, t } from "@/data/translations";
-import { fetchPrayerTimesServer } from "@/lib/fetchPrayerTimes";
+import { getPrayerTimes } from "@/lib/prayerTimes";
+import { placeForCity } from "@/lib/places";
 import { hreflangAlternates } from "@/lib/seo";
+import { cityCopy } from "@/lib/seoCopy";
 import { cityFaqItems } from "@/data/faq";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
 import { PrayerTimesImage } from "@/components/PrayerTimesImage";
@@ -17,6 +19,9 @@ import { Footer } from "@/components/Footer";
 interface Props {
   params: Promise<{ locale: string; city: string }>;
 }
+
+// Hourly ISR keeps server-rendered times and the month in the title current.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   const locales = ["uz", "uz-cyrl", "ru", "en", "tg", "ky"];
@@ -32,59 +37,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!city) return {};
   const name = getCityName(city, l);
 
-  // Fetch actual prayer times for dynamic meta title + description
-  const times = await fetchPrayerTimesServer(city.lat, city.lng);
-
-  // Localized prayer time string for descriptions
-  const prayerLabels: Record<Locale, [string, string, string, string, string]> = {
-    uz: ["Bomdod", "Peshin", "Asr", "Shom", "Xufton"],
-    "uz-cyrl": ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
-    ru: ["Фаджр", "Зухр", "Аср", "Магриб", "Иша"],
-    en: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
-    tg: ["Бомдод", "Пешин", "Аср", "Шом", "Хуфтон"],
-    ky: ["Багымдат", "Бешим", "Аср", "Шам", "Куптан"],
-  };
-  const [lFajr, lDhuhr, lAsr, lMaghrib, lIsha] = prayerLabels[l];
-  const timesStr = times
-    ? `${lFajr}: ${times.fajr} | ${lDhuhr}: ${times.dhuhr} | ${lAsr}: ${times.asr} | ${lMaghrib}: ${times.maghrib} | ${lIsha}: ${times.isha}`
-    : "";
-
-  const titles: Record<Locale, string> = {
-    uz: times
-      ? `${name} namoz vaqtlari bugun ✓ Bomdod ${times.fajr} | Shom ${times.maghrib}`
-      : `${name} namoz vaqtlari bugun 2026 — aniq vaqtlar`,
-    "uz-cyrl": times
-      ? `${name} намоз вақтлари бугун ✓ Бомдод ${times.fajr} | Шом ${times.maghrib}`
-      : `${name} намоз вақтлари бугун 2026 — аниқ вақтлар`,
-    ru: times
-      ? `Намаз ${name} сегодня ✓ Фаджр ${times.fajr} | Магриб ${times.maghrib}`
-      : `Время намаза ${name} сегодня 2026`,
-    en: times
-      ? `${name} Prayer Times Today ✓ Fajr ${times.fajr} | Maghrib ${times.maghrib}`
-      : `${name} Prayer Times Today 2026`,
-    tg: times
-      ? `Вақти намоз ${name} имрӯз ✓ Бомдод ${times.fajr} | Шом ${times.maghrib}`
-      : `Вақти намоз ${name} имрӯз 2026`,
-    ky: times
-      ? `Намаз убактысы ${name} бүгүн ✓ Багымдат ${times.fajr} | Шам ${times.maghrib}`
-      : `Намаз убактысы ${name} бүгүн 2026`,
-  };
-
-  const descs: Record<Locale, string> = {
-    uz: `${name} namoz vaqtlari bugun: ${timesStr}. Hanafiy mazhab, MWL usuli. Oylik taqvim, tuman vaqtlari.`,
-    "uz-cyrl": `${name} намоз вақтлари бугун: ${timesStr}. Ҳанафий мазҳаб, MWL усули. Ойлик тақвим.`,
-    ru: `Время намаза в ${name} сегодня: ${timesStr}. Ханафитский мазхаб, MWL. Месячный календарь.`,
-    en: `Prayer times in ${name} today: ${timesStr}. Hanafi school, MWL method. Monthly calendar.`,
-    tg: `Вақти намоз дар ${name} имрӯз: ${timesStr}. Мазҳаби Ҳанафӣ, MWL. Тақвими моҳона.`,
-    ky: `${name} намаз убактысы бүгүн: ${timesStr}. Ханафий мазхаб, MWL. Айлык календарь.`,
-  };
+  // No live times in the snippet on purpose: showing them answered the query in
+  // the SERP (zero-click) and Google often displayed stale cached times.
+  const { title, description } = cityCopy(l, name);
 
   return {
-    title: titles[l],
-    description: descs[l],
+    title,
+    description,
     openGraph: {
-      title: titles[l],
-      description: descs[l],
+      title,
+      description,
       url: `https://namozim.uz/${locale}/${slug}`,
       images: [`https://namozim.uz/${locale}/${slug}/opengraph-image`],
     },
@@ -102,7 +64,9 @@ export default async function CityPage({ params }: Props) {
   if (!city) notFound();
   const name = getCityName(city, l);
   const region = getCityRegion(city, l);
-  const serverTimes = await fetchPrayerTimesServer(city.lat, city.lng);
+  const place = placeForCity(city);
+  const serverTimes = getPrayerTimes(place);
+  const officialUz = place.method === "uzbekistan";
 
   return (
     <>
@@ -115,15 +79,15 @@ export default async function CityPage({ params }: Props) {
         ]}
       />
       <main>
-        <CityPrayerTimes city={city} locale={l} />
+        <CityPrayerTimes city={city} locale={l} place={place} initialTimes={serverTimes} />
 
         {/* Static visual card for Google Images indexing */}
-        <PrayerTimesImage locale={l} city={name} times={serverTimes} />
+        <PrayerTimesImage locale={l} city={name} times={serverTimes} officialUz={officialUz} />
 
         <section className="py-12">
           <div className="max-w-3xl mx-auto px-5">
             <article className="text-text-secondary space-y-3 text-sm leading-relaxed">
-              <p>{name} ({region}) {t(l, "city_about_p1")}</p>
+              <p>{name} ({region}) {t(l, officialUz ? "city_about_p1_uz" : "city_about_p1")}</p>
               <p>{t(l, "city_about_p2")}</p>
               <p>{t(l, "city_about_p3")}</p>
               {(city.country === "tj") && (
@@ -174,7 +138,7 @@ export default async function CityPage({ params }: Props) {
             </div>
           </div>
         </section>
-        <Faq items={cityFaqItems(name, serverTimes, l)} heading={t(l, "faq_title")} />
+        <Faq items={cityFaqItems(name, serverTimes, l, officialUz)} heading={t(l, "faq_title")} />
         <Download locale={l} />
       </main>
       <Footer locale={l} />
