@@ -1,7 +1,27 @@
 {
-  "name": "landing",
+  "name": "namozim-landing",
   "version": "0.1.0",
+  "description": "Accurate prayer times web application & landing page for Namozim, built with Next.js 16, TypeScript, Tailwind CSS, and Adhan.",
   "private": true,
+  "license": "MIT",
+  "homepage": "https://namozim.uz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/myaxyo/namozim-landing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/myaxyo/namozim-landing/issues"
+  },
+  "keywords": [
+    "prayer-times",
+    "namoz-vaqtlari",
+    "islamic-app",
+    "nextjs",
+    "react",
+    "adhan",
+    "uzbekistan",
+    "tailwind-css"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +30,6 @@
   },
   "dependencies": {
     "@typedigital/telemetrydeck-react": "^0.5.0",
-    "@vercel/analytics": "^2.0.1",
     "adhan": "4.4.6",
     "html-to-image": "^1.11.13",
     "next": "16.2.9",

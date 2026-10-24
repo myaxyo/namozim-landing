@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { CITIES, getCityName, getCityRegion } from "@/data/cities";
-import { Locale, t } from "@/data/translations";
+import { Locale } from "@/data/translations";
 
 const SEARCH_PLACEHOLDER: Record<Locale, string> = {
   uz: "Shahar nomini yozing...",

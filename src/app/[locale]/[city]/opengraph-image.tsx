@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { getCityBySlug, getCityName, CITIES } from "@/data/cities";
+import { getCityBySlug, getCityName } from "@/data/cities";
 import { getPrayerTimes } from "@/lib/prayerTimes";
 import { placeForCity } from "@/lib/places";
 import { Locale } from "@/data/translations";

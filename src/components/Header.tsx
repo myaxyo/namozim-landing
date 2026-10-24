@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { Locale, t } from "@/data/translations";
 
 export function Header({ locale }: { locale: Locale }) {
@@ -11,7 +12,7 @@ export function Header({ locale }: { locale: Locale }) {
     <header className="sticky top-0 z-50 bg-surface/85 backdrop-blur-lg border-b border-border-light">
       <div className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
         <a href={`/${locale}`} className="flex items-center gap-2.5">
-          <img src="/icon-192.png" alt="Namozim" width={32} height={32} className="rounded-lg" />
+          <Image src="/icon-192.png" alt="Namozim" width={32} height={32} className="rounded-lg" />
           <span className="font-[family-name:var(--font-display)] text-lg font-bold text-text">{t(locale, "site_name")}</span>
         </a>
 

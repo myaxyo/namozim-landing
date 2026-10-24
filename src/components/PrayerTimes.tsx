@@ -37,7 +37,9 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
 
   // Set date on client only to avoid hydration mismatch
   useEffect(() => {
-    setDate(formatDate(new Date(), locale));
+    queueMicrotask(() => {
+      setDate(formatDate(new Date(), locale));
+    });
   }, [locale]);
 
   // Calculated locally. Visitors in Uzbekistan get the Muslim Board timetable; others get MWL.
@@ -79,8 +81,10 @@ export function PrayerTimes({ locale }: { locale: Locale }) {
         }
       );
     } else {
-      setCity("Toshkent");
-      fetchTashkent();
+      queueMicrotask(() => {
+        setCity("Toshkent");
+        fetchTashkent();
+      });
     }
   }, [fetchTimes, fetchTashkent, resolveCity]);
 
