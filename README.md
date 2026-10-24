@@ -48,7 +48,7 @@ The platform provides static pre-rendering for over 5,000 localized city and dis
   - One-click export of current prayer times to a beautifully styled PNG image (`html-to-image`) optimized for mobile messaging and social stories.
 - 🚀 **SEO & Performance Engineered**
   - Static Site Generation (SSG) with incremental revalidation.
-  - Automated OpenGraph preview images (`@vercel/og` compatible / native Next.js OG).
+  - Automated OpenGraph preview images (native Next.js `ImageResponse`).
   - Complete Schema.org JSON-LD structured metadata (`WebSite`, `Organization`, `MobileApplication`).
   - Privacy-friendly telemetry with Umami and TelemetryDeck.
 
@@ -191,6 +191,20 @@ Please review our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduc
 ## 📄 License
 
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
+
+---
+
+## ℹ️ About Namozim
+
+**Namozim** is a modern, privacy-focused Islamic utility platform designed to give Muslims accurate, reliable prayer times and spiritual companions both on the web and on mobile devices.
+
+- **Mission**: Provide accessible, ad-free, and precise prayer calculations based on authoritative regional religious boards.
+- **Official Source**: For Uzbekistan, times are calibrated against the official timetable of the **Muslims Board of Uzbekistan** (*O‘zbekiston Musulmonlari Idorasi*), following the Hanafi school of jurisprudence.
+- **Maintainer**: Developed and maintained by [Prompter MChJ](https://prompter.uz) and open-source contributors.
+- **Ecosystem**:
+  - Web: [namozim.uz](https://namozim.uz)
+  - Android: [Google Play Store](https://play.google.com/store/apps/details?id=com.mo_dev.nomozvaqti)
+  - iOS: [Apple App Store](https://apps.apple.com/us/app/namozim/id6761498579)
 
 ---
 
