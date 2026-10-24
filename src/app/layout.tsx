@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/JsonLd";
 import { TelemetryDeck } from "@/components/TelemetryDeckProvider";
 import { hreflangAlternates, SITE_URL } from "@/lib/seo";
@@ -164,13 +163,13 @@ export default function RootLayout({
         />
         <noscript>
           <div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="https://mc.yandex.ru/watch/110936145" style={{ position: "absolute", left: "-9999px" }} alt="" />
           </div>
         </noscript>
         <TelemetryDeck>
           {children}
         </TelemetryDeck>
-        <Analytics />
       </body>
     </html>
   );
