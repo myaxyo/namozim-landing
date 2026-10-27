@@ -7,6 +7,14 @@ import { type Place, type Times, getPrayerTimes, secondsNowIn } from "@/lib/pray
 
 const ICONS: Record<string, string> = { fajr: "\u{1F319}", sunrise: "\u{1F305}", dhuhr: "\u{2600}\u{FE0F}", asr: "\u{1F324}", maghrib: "\u{1F307}", isha: "\u{2728}" };
 
+const PRAYER_SLUGS: Partial<Record<string, string>> = {
+  fajr: "bomdod",
+  dhuhr: "peshin",
+  asr: "asr",
+  maghrib: "shom",
+  isha: "xufton",
+};
+
 export function CityPrayerTimes({
   city,
   locale,
@@ -90,8 +98,9 @@ export function CityPrayerTimes({
             <div className="divide-y divide-border-light">
               {(["fajr","sunrise","dhuhr","asr","maghrib","isha"] as const).map((k) => {
                 const active = k === nextPrayer;
-                return (
-                  <div key={k} className={`flex items-center justify-between px-6 py-4 ${active ? "bg-primary-soft" : "hover:bg-surface-muted"} transition-colors`}>
+                const slug = PRAYER_SLUGS[k];
+                const rowContent = (
+                  <>
                     <div className="flex items-center gap-3">
                       <span className="text-xl w-8 text-center">{ICONS[k]}</span>
                       <div>
@@ -99,7 +108,33 @@ export function CityPrayerTimes({
                         {active && <p className="text-primary text-[11px]">{t(locale, "next_prayer")}</p>}
                       </div>
                     </div>
-                    <time className={`font-[family-name:var(--font-display)] text-xl font-bold tabular-nums ${active ? "text-primary" : "text-text"}`}>{times[k]}</time>
+                    <div className="flex items-center gap-2">
+                      <time className={`font-[family-name:var(--font-display)] text-xl font-bold tabular-nums ${active ? "text-primary" : "text-text"}`}>{times[k]}</time>
+                      {slug && (
+                        <span className="text-text-muted/60 text-xs hidden sm:inline-block group-hover:text-primary transition-colors">
+                          &rarr;
+                        </span>
+                      )}
+                    </div>
+                  </>
+                );
+
+                if (slug) {
+                  return (
+                    <a
+                      key={k}
+                      href={`/${locale}/${city.slug}/${slug}`}
+                      title={`${name} ${t(locale, k)} vaqti haqida batafsil`}
+                      className={`group flex items-center justify-between px-6 py-4 ${active ? "bg-primary-soft" : "hover:bg-surface-muted"} transition-colors`}
+                    >
+                      {rowContent}
+                    </a>
+                  );
+                }
+
+                return (
+                  <div key={k} className={`flex items-center justify-between px-6 py-4 ${active ? "bg-primary-soft" : "hover:bg-surface-muted"} transition-colors`}>
+                    {rowContent}
                   </div>
                 );
               })}

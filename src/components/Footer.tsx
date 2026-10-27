@@ -12,9 +12,10 @@ export function Footer({ locale }: { locale: Locale }) {
             </a>{" "}
             {locale === "ru" ? "продукт" : locale === "en" ? "product" : locale === "uz-cyrl" ? "маҳсулоти" : "mahsuloti"}
           </p>
-          <div className="flex gap-5">
+          <div className="flex gap-5 flex-wrap justify-center">
             <a href={`/${locale}#prayer-times`} className="hover:text-primary transition-colors">{t(locale, "nav_prayer_times")}</a>
             <a href={`/${locale}/shaharlar`} className="hover:text-primary transition-colors">{t(locale, "nav_cities")}</a>
+            <a href={`/${locale}#about`} className="hover:text-primary transition-colors">{t(locale, "nav_about")}</a>
             <a href={`/${locale}#download`} className="hover:text-primary transition-colors">{t(locale, "nav_download")}</a>
           </div>
         </div>

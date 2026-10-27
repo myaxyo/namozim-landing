@@ -53,8 +53,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     feat_dark: "Qorong\u2018u rejim",
     feat_dark_d: "Ko\u2018zni charchatmaydigan tungi mavzu",
     location_auto: "Joylashuvingiz bo\u2018yicha",
-    seo_title: "Namoz vaqtlari bugun 2026 — barcha shahar va tumanlar",
-    seo_desc: "O'zbekiston va dunyo bo'ylab bugungi aniq namoz vaqtlari. Toshkent, Moskva, Istanbul, Dubay va 80+ shahar. Hanafiy mazhab. Namoz vaqti bugun.",
+    seo_title: "Namoz Vaqtlari 2026 — Bugungi Aniq & Rasmiy Taqvim (O‘MI)",
+    seo_desc: "O‘zbekiston bo'yicha bugungi aniq namoz vaqtlari: Toshkent, Samarqand, Andijon, Farg'ona va butun respublika. O‘zbekiston musulmonlari idorasi rasmiy taqvimi, Hanafiy mazhab.",
   },
   "uz-cyrl": {
     site_name: "Намозим",
@@ -108,8 +108,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     feat_dark: "Қоронғу режим",
     feat_dark_d: "Кўзни чарчатмайдиган тунги мавзу",
     location_auto: "Жойлашувингиз бўйича",
-    seo_title: "Намоз вақтлари бугун 2026 — барча шаҳар ва туманлар",
-    seo_desc: "Ўзбекистон ва дунё бўйлаб бугунги аниқ намоз вақтлари. Тошкент, Москва, Истанбул, Дубай ва 80+ шаҳар. Ҳанафий мазҳаб. Намоз вақти бугун.",
+    seo_title: "Намоз Вақтлари 2026 — Бугунги Аниқ ва Расмий Тақвим (ЎМИ)",
+    seo_desc: "Ўзбекистон бўйича бугунги аниқ намоз вақтлари: Тошкент, Самарқанд, Андижон, Фарғона ва бутун республика. Ўзбекистон мусулмонлари идораси расмий тақвими, Ҳанафий мазҳаб.",
   },
   ru: {
     site_name: "Намозим",
@@ -163,8 +163,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     feat_dark: "Тёмная тема",
     feat_dark_d: "Комфортный ночной режим",
     location_auto: "По вашему местоположению",
-    seo_title: "Время намаза сегодня 2026 — Ташкент, Москва и 80+ городов",
-    seo_desc: "Точное время намаза сегодня: Москва, Санкт-Петербург, Казань, Стамбул, Дубай, Ташкент и 80+ городов. Ханафитский мазхаб, метод MWL.",
+    seo_title: "Время Намаза Сегодня 2026 — Точное Расписание (Ханафи)",
+    seo_desc: "Точное время намаза на сегодня: Ташкент, Москва, Самарканд, Бишкек и города СНГ. Официальное расписание ДУМ Узбекистана и метод MWL. Ханафитский мазхаб.",
   },
   en: {
     site_name: "Namozim",

@@ -5,7 +5,7 @@ import { getDistrictsByCity, getDistrictName } from "@/data/districts";
 import { Locale, t } from "@/data/translations";
 import { getPrayerTimes } from "@/lib/prayerTimes";
 import { placeForCity } from "@/lib/places";
-import { hreflangAlternates } from "@/lib/seo";
+import { hreflangAlternates, SITE_URL } from "@/lib/seo";
 import { cityCopy } from "@/lib/seoCopy";
 import { cityFaqItems } from "@/data/faq";
 import { CityPrayerTimes } from "@/components/CityPrayerTimes";
@@ -13,6 +13,7 @@ import { PrayerTimesImage } from "@/components/PrayerTimesImage";
 import { Header } from "@/components/Header";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Faq } from "@/components/Faq";
+import { JsonLd } from "@/components/JsonLd";
 import { Download } from "@/components/Download";
 import { Footer } from "@/components/Footer";
 
@@ -68,6 +69,51 @@ export default async function CityPage({ params }: Props) {
   const serverTimes = getPrayerTimes(place);
   const officialUz = place.method === "uzbekistan";
 
+  const prayerItemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${name} namoz vaqtlari`,
+    description: `${name} uchun bugungi rasmiy namoz vaqtlari jadvali`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: `${t(l, "fajr")} (${name})`,
+        url: `${SITE_URL}/${locale}/${slug}/bomdod`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: `${t(l, "dhuhr")} (${name})`,
+        url: `${SITE_URL}/${locale}/${slug}/peshin`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: `${t(l, "asr")} (${name})`,
+        url: `${SITE_URL}/${locale}/${slug}/asr`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: `${t(l, "maghrib")} (${name})`,
+        url: `${SITE_URL}/${locale}/${slug}/shom`,
+      },
+      {
+        "@type": "ListItem",
+        position: 5,
+        name: `${t(l, "isha")} (${name})`,
+        url: `${SITE_URL}/${locale}/${slug}/xufton`,
+      },
+      {
+        "@type": "ListItem",
+        position: 6,
+        name: `${l === "ru" ? "Календарь на месяц" : l === "uz-cyrl" ? "Ойлик тақвим" : "Oylik taqvim"} (${name})`,
+        url: `${SITE_URL}/${locale}/${slug}/oylik`,
+      },
+    ],
+  };
+
   return (
     <>
       <Header locale={l} />
@@ -80,6 +126,7 @@ export default async function CityPage({ params }: Props) {
       />
       <main>
         <CityPrayerTimes city={city} locale={l} place={place} initialTimes={serverTimes} />
+        <JsonLd data={prayerItemListJsonLd} />
 
         {/* Static visual card for Google Images indexing */}
         <PrayerTimesImage locale={l} city={name} times={serverTimes} officialUz={officialUz} />
