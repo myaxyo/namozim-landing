@@ -20,7 +20,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Namoz Vaqtlari 2026 — Aniq Namoz Vaqti | Bomdod, Peshin, Asr, Shom, Xufton",
+  title: "Namoz Vaqtlari 2026 — Bugungi Aniq & Rasmiy Taqvim | Namozim",
   description:
     "Dunyo bo'ylab bugungi aniq namoz vaqtlari. O'zbekiston, Rossiya, Turkiya, BAA, Koreya va boshqa mamlakatlar. O‘zbekiston uchun — O‘zbekiston musulmonlari idorasi rasmiy taqvimi, Hanafiy mazhab. Bepul onlayn xizmat.",
   keywords: [
